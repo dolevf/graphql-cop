@@ -17,7 +17,7 @@ GraphQL Cop is a small Python utility to run common security tests against Graph
 - GraphiQL (Info Leak)
 - Introspection (Info Leak)
 
-# How to use
+# Usage
 ```
 python3 main.py https://mywebsite.com/graphql
 
