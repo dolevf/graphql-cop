@@ -17,3 +17,17 @@ GraphQL Cop is a small Python utility to run common security tests against Graph
 - GraphiQL (Info Leak)
 - Introspection (Info Leak)
 
+# How to use
+```
+python3 main.py https://mywebsite.com/graphql
+
+                GraphQL Cop 1.0
+           Security Auditor for GraphQL
+         Dolev Farhi <dolev@lethalbit.com>
+  
+Starting...
+[HIGH] Introspection Query Enabled (Information Leakage)
+[LOW] GraphQL Playground UI (Information Leakage)
+[HIGH] Alias Overloading with 100+ aliases is allowed (Denial of Service)
+[HIGH] Queries are allowed with 1000+ of the same repeated field (Denial of Service)
+```
