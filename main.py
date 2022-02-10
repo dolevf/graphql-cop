@@ -8,6 +8,7 @@ from lib.tests.info_get_method_support import get_method_support
 from lib.tests.dos_alias_overloading import alias_overloading
 from lib.tests.dos_batch import batch_query
 from lib.tests.dos_field_duplication import field_duplication
+from lib.tests.dos_directive_overloading import directive_overloading
 from lib.tests.info_trace_mode import trace_mode
 from lib.utils import severity_conversion, is_graphql, draw_art
 
@@ -89,3 +90,10 @@ trc_impact = 'Information Leakage'
 if trace_mode(url):
     print('[{}] {} ({})'.format(severity_conversion(trc_severity), 'Tracing is enabled', trc_impact))
 
+"""
+    Directive Overloading
+"""
+do_severity = 3
+do_impact = 'Denial of Service'
+if directive_overloading(url):
+    print('[{}] {} ({})'.format(severity_conversion(do_severity), 'Multiple duplicated directives allowed in a query', do_impact))
