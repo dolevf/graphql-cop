@@ -72,11 +72,6 @@ def is_graphql(url):
   else:
     return False
 
-def severity_conversion(n):
-  sevmap = {0:'Info', 1:'Low', 2:'Medium', 3:'High', 4:'Critical'}
-  return sevmap[n].upper()
-
-
 def draw_art():
   return '''
                 GraphQL Cop {version}

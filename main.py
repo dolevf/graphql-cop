@@ -1,6 +1,9 @@
 #!/usr/env/python3
 import sys
 
+from optparse import OptionParser
+from version import VERSION
+
 from lib.tests.info_field_suggestions import field_suggestions
 from lib.tests.info_introspect import introspection
 from lib.tests.info_graphiql import detect_graphiql
@@ -10,90 +13,122 @@ from lib.tests.dos_batch import batch_query
 from lib.tests.dos_field_duplication import field_duplication
 from lib.tests.dos_directive_overloading import directive_overloading
 from lib.tests.info_trace_mode import trace_mode
-from lib.utils import severity_conversion, is_graphql, draw_art
+from lib.utils import is_graphql, draw_art
 
-if len(sys.argv) < 2:
-    print(draw_art())
-    print('Error: Missing URL.')
-    print('e.g. https://mysite.com/graphql')
+
+print(draw_art())
+
+parser = OptionParser(usage='%prog -t http://example.com -o json')
+parser.add_option('-t', '--target', dest='url', help='target url with the path')
+parser.add_option('-o', '--output', dest='output_json', 
+                        help='Output results to stdout (JSON)', default=False)
+
+parser.add_option('--version', '-v', dest='version', action='store_true', default=False, 
+                        help='Print out the current version and exit.')
+options, args = parser.parse_args()
+
+if options.version:
+    print('version:', VERSION)
+    sys.exit(0)
+
+if not options.url:
+    parser.print_help()
     sys.exit(1)
 
-url = sys.argv[1]
+url = options.url
+
 if not is_graphql(url):
     print(url, 'does not seem to be running GraphQL.')
     sys.exit(1)
 
-print(draw_art())
+
 print('Starting...')
+
+json_output = {}
+
 """
     Field Suggestions
 """
-fs_severity = 1
-fs_impact = 'Information Leakage'
 if field_suggestions(url):
-    print('[{}] {} ({})'.format(severity_conversion(fs_severity), 'Field Suggestions is Enabled', fs_impact))
+    json_output['Field Suggestions'] = {}
+    json_output['Field Suggestions']['severity'] = 'LOW'
+    json_output['Field Suggestions']['impact'] = 'Information Leakage'
+    json_output['Field Suggestions']['description'] = 'Field Suggestions are Enabled'
 
 """
     Introspection
 """
-ins_severity = 3
-ins_impact = 'Information Leakage'
 if introspection(url):
-    print('[{}] {} ({})'.format(severity_conversion(ins_severity), 'Introspection Query Enabled', ins_impact))
+    json_output['Introspection'] = {}
+    json_output['Introspection']['severity'] = 'HIGH'
+    json_output['Introspection']['impact'] = 'Information Leakage'
+    json_output['Introspection']['description'] = 'Introspection Query Enabled'
 
 """
     Playground
 """
-pg_severity = 1
-pg_impact = 'Information Leakage'
 if detect_graphiql(url):
-    print('[{}] {} ({})'.format(severity_conversion(pg_severity), 'GraphQL Playground UI', pg_impact))
+    json_output['GraphiQL Playground'] = {}
+    json_output['GraphiQL Playground']['severity'] = 'LOW'
+    json_output['GraphiQL Playground']['impact'] = 'Information Leakage'
+    json_output['GraphiQL Playground']['description'] = 'GraphiQL Explorer Enabled'
 
 """
-    HTTP GET method support (maybe CSRF)
+    HTTP GET method support
 """
-hget_severity = 1
-hget_impact = 'Possible CSRF'
 if get_method_support(url):
-    print('[{}] {} ({})'.format(severity_conversion(hget_severity), 'HTTP GET Method Query Enabled', hget_impact))
-
+    json_output['Possible CSRF (GET)'] = {}
+    json_output['Possible CSRF (GET)']['severity'] = 'LOW'
+    json_output['Possible CSRF (GET)']['impact'] = 'Possible CSRF'
+    json_output['Possible CSRF (GET)']['description'] = 'HTTP GET method supported (maybe CSRF)'
+    
 """
     Alias Overloading
 """
-alias_severity = 3
-alias_impact = 'Denial of Service'
 if alias_overloading(url):
-    print('[{}] {} ({})'.format(severity_conversion(alias_severity), 'Alias Overloading with 100+ aliases is allowed', alias_impact))
+    json_output['Alias Overloading'] = {}
+    json_output['Alias Overloading']['severity'] = 'HIGH'
+    json_output['Alias Overloading']['impact'] = 'Denial of Service'
+    json_output['Alias Overloading']['description'] = 'Alias Overloading with 100+ aliases is allowed'
 
 """
     Batch Queries
 """
-batch_severity = 3
-batch_impact = 'Denial of Service'
 if batch_query(url):
-    print('[{}] {} ({})'.format(severity_conversion(batch_severity), 'Batch queries allowed with 10+ simultaneous queries)', batch_impact))
-
+    json_output['Batch Queries'] = {}
+    json_output['Batch Queries']['severity'] = 'HIGH'
+    json_output['Batch Queries']['impact'] = 'Denial of Service'
+    json_output['Batch Queries']['description'] = 'Batch queries allowed with 10+ simultaneous queries)'
 
 """
     Field Duplication
 """
-dup_severity = 3
-dup_impact = 'Denial of Service'
 if field_duplication(url):
-    print('[{}] {} ({})'.format(severity_conversion(dup_severity), 'Queries are allowed with 1000+ of the same repeated field', dup_impact))
+    json_output['Field Duplication'] = {}
+    json_output['Field Duplication']['severity'] = 'HIGH'
+    json_output['Field Duplication']['impact'] = 'Denial of Service'
+    json_output['Field Duplication']['description'] = 'Queries are allowed with 1000+ of the same repeated field'
 
 """
     Tracing mode
 """
-trc_severity = 0
-trc_impact = 'Information Leakage'
 if trace_mode(url):
-    print('[{}] {} ({})'.format(severity_conversion(trc_severity), 'Tracing is enabled', trc_impact))
+    json_output['Tracing Mode'] = {}
+    json_output['Tracing Mode']['severity'] = 'INFORMATIONAL'
+    json_output['Tracing Mode']['impact'] = 'Information Leakage'
+    json_output['Tracing Mode']['description'] = 'Traicng is enabled'
 
 """
     Directive Overloading
 """
-do_severity = 3
-do_impact = 'Denial of Service'
 if directive_overloading(url):
-    print('[{}] {} ({})'.format(severity_conversion(do_severity), 'Multiple duplicated directives allowed in a query', do_impact))
+    json_output['Directive Overloading'] = {}
+    json_output['Directive Overloading']['severity'] = 'HIGH'
+    json_output['Directive Overloading']['impact'] = 'Denial of Service'
+    json_output['Directive Overloading']['description'] = 'Multiple duplicated directives allowed in a query'
+
+if options.output_json == 'json':
+    print(json_output)
+else:
+    for k, v in json_output.items():
+        print('[{}] {} - {} ({})'.format(v['severity'], k, v['description'], v['impact']))
