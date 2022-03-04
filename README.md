@@ -24,7 +24,7 @@ python3 main.py -t https://mywebsite.com/graphql
 
                 GraphQL Cop 1.0
            Security Auditor for GraphQL
-         Dolev Farhi <dolev@lethalbit.com>
+            Dolev Farhi & Nick Aleks
   
 Starting...
 [HIGH] Introspection Query Enabled (Information Leakage)
