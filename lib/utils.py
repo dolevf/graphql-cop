@@ -76,5 +76,5 @@ def draw_art():
   return '''
                 GraphQL Cop {version}
            Security Auditor for GraphQL
-         Dolev Farhi <dolev@lethalbit.com>
+             Dolev Farhi & Nick Aleks
   '''.format(version=VERSION)
