@@ -107,7 +107,7 @@ if field_duplication(url):
     json_output['Field Duplication'] = {}
     json_output['Field Duplication']['severity'] = 'HIGH'
     json_output['Field Duplication']['impact'] = 'Denial of Service'
-    json_output['Field Duplication']['description'] = 'Queries are allowed with 1000+ of the same repeated field'
+    json_output['Field Duplication']['description'] = 'Queries are allowed with 500 of the same repeated field'
 
 """
     Tracing mode
