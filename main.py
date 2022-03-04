@@ -116,7 +116,7 @@ if trace_mode(url):
     json_output['Tracing Mode'] = {}
     json_output['Tracing Mode']['severity'] = 'INFORMATIONAL'
     json_output['Tracing Mode']['impact'] = 'Information Leakage'
-    json_output['Tracing Mode']['description'] = 'Traicng is enabled'
+    json_output['Tracing Mode']['description'] = 'Tracing is enabled'
 
 """
     Directive Overloading
