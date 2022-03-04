@@ -20,7 +20,7 @@ GraphQL Cop is a small Python utility to run common security tests against Graph
 
 # Usage
 ```
-python3 main.py -t https://mywebsite.com/graphql
+python3 graphql-cop.py -t https://mywebsite.com/graphql
 
                 GraphQL Cop 1.0
            Security Auditor for GraphQL
