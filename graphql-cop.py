@@ -16,8 +16,6 @@ from lib.tests.info_trace_mode import trace_mode
 from lib.utils import is_graphql, draw_art
 
 
-print(draw_art())
-
 parser = OptionParser(usage='%prog -t http://example.com -o json')
 parser.add_option('-t', '--target', dest='url', help='target url with the path')
 parser.add_option('-o', '--output', dest='output_json', 
@@ -32,6 +30,7 @@ if options.version:
     sys.exit(0)
 
 if not options.url:
+    print(draw_art())
     parser.print_help()
     sys.exit(1)
 
@@ -40,9 +39,6 @@ url = options.url
 if not is_graphql(url):
     print(url, 'does not seem to be running GraphQL.')
     sys.exit(1)
-
-
-print('Starting...')
 
 json_output = {}
 
