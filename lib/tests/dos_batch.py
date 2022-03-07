@@ -6,7 +6,7 @@ def batch_query(url):
   gql_response = graph_batch_query(url, payload='query { __typename }')
 
   try:
-      if len(gql_response.get('data', [])) >= 10:
+      if len(gql_response) >= 10:
         result = True
   except:
     pass
