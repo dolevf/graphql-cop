@@ -1,6 +1,9 @@
+"""Field duplication tests."""
 from lib.utils import graph_query
 
+
 def field_duplication(url):
+  """Check for field duplication."""
   result = False
 
   duplicated_string = '__typename \n' * 500

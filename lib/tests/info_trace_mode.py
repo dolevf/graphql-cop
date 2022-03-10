@@ -1,6 +1,9 @@
+"""Collect trace mode details."""
 from lib.utils import graph_query, get_error
 
+
 def trace_mode(url):
+  """Get the trace mode."""
   result = False
 
   q = 'query { __typename }'    
