@@ -3,6 +3,7 @@ import sys
 
 from optparse import OptionParser
 from version import VERSION
+from config import HEADERS
 
 from lib.tests.info_field_suggestions import field_suggestions
 from lib.tests.info_introspect import introspection
@@ -18,9 +19,11 @@ from lib.utils import is_graphql, draw_art
 
 parser = OptionParser(usage='%prog -t http://example.com -o json')
 parser.add_option('-t', '--target', dest='url', help='target url with the path')
+parser.add_option('-H', '--header', dest='header', help='Append Header to the request ("Authorization: XYZY")')
 parser.add_option('-o', '--output', dest='output_json', 
                         help='Output results to stdout (JSON)', default=False)
-
+parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False, 
+                        help='Sends the request throug http://127.0.0.1:8080 proxy')
 parser.add_option('--version', '-v', dest='version', action='store_true', default=False, 
                         help='Print out the current version and exit.')
 options, args = parser.parse_args()
@@ -34,9 +37,21 @@ if not options.url:
     parser.print_help()
     sys.exit(1)
 
+if options.proxy == True:
+    proxy = {
+        'http':  'http://127.0.0.1:8080',
+        'https': 'http://127.0.0.1:8080',
+    }
+else:
+    proxy = {}
+
+if options.header != None:
+    HEADERS.update({ options.header.split(': ')[0] : options.header.split(': ')[1]})
+
+print(HEADERS)
 url = options.url
 
-if not is_graphql(url):
+if not is_graphql(url, proxy, HEADERS):
     print(url, 'does not seem to be running GraphQL.')
     sys.exit(1)
 
@@ -45,7 +60,7 @@ json_output = {}
 """
     Field Suggestions
 """
-if field_suggestions(url):
+if field_suggestions(url, proxy, HEADERS):
     json_output['Field Suggestions'] = {}
     json_output['Field Suggestions']['severity'] = 'LOW'
     json_output['Field Suggestions']['impact'] = 'Information Leakage'
@@ -54,7 +69,7 @@ if field_suggestions(url):
 """
     Introspection
 """
-if introspection(url):
+if introspection(url, proxy, HEADERS):
     json_output['Introspection'] = {}
     json_output['Introspection']['severity'] = 'HIGH'
     json_output['Introspection']['impact'] = 'Information Leakage'
@@ -63,7 +78,7 @@ if introspection(url):
 """
     Playground
 """
-if detect_graphiql(url):
+if detect_graphiql(url, proxy, HEADERS):
     json_output['GraphiQL Playground'] = {}
     json_output['GraphiQL Playground']['severity'] = 'LOW'
     json_output['GraphiQL Playground']['impact'] = 'Information Leakage'
@@ -72,7 +87,7 @@ if detect_graphiql(url):
 """
     HTTP GET method support
 """
-if get_method_support(url):
+if get_method_support(url, proxy, HEADERS):
     json_output['Possible CSRF (GET)'] = {}
     json_output['Possible CSRF (GET)']['severity'] = 'LOW'
     json_output['Possible CSRF (GET)']['impact'] = 'Possible CSRF'
@@ -81,7 +96,7 @@ if get_method_support(url):
 """
     Alias Overloading
 """
-if alias_overloading(url):
+if alias_overloading(url, proxy, HEADERS):
     json_output['Alias Overloading'] = {}
     json_output['Alias Overloading']['severity'] = 'HIGH'
     json_output['Alias Overloading']['impact'] = 'Denial of Service'
@@ -90,7 +105,7 @@ if alias_overloading(url):
 """
     Batch Queries
 """
-if batch_query(url):
+if batch_query(url, proxy, HEADERS):
     json_output['Batch Queries'] = {}
     json_output['Batch Queries']['severity'] = 'HIGH'
     json_output['Batch Queries']['impact'] = 'Denial of Service'
@@ -99,7 +114,7 @@ if batch_query(url):
 """
     Field Duplication
 """
-if field_duplication(url):
+if field_duplication(url, proxy, HEADERS):
     json_output['Field Duplication'] = {}
     json_output['Field Duplication']['severity'] = 'HIGH'
     json_output['Field Duplication']['impact'] = 'Denial of Service'
@@ -108,7 +123,7 @@ if field_duplication(url):
 """
     Tracing mode
 """
-if trace_mode(url):
+if trace_mode(url, proxy, HEADERS):
     json_output['Tracing Mode'] = {}
     json_output['Tracing Mode']['severity'] = 'INFORMATIONAL'
     json_output['Tracing Mode']['impact'] = 'Information Leakage'
@@ -117,7 +132,7 @@ if trace_mode(url):
 """
     Directive Overloading
 """
-if directive_overloading(url):
+if directive_overloading(url, proxy, HEADERS):
     json_output['Directive Overloading'] = {}
     json_output['Directive Overloading']['severity'] = 'HIGH'
     json_output['Directive Overloading']['impact'] = 'Denial of Service'
