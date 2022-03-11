@@ -4,6 +4,7 @@ import sys
 from optparse import OptionParser
 from version import VERSION
 from config import HEADERS
+from json import loads
 
 from lib.tests.info_field_suggestions import field_suggestions
 from lib.tests.info_introspect import introspection
@@ -19,7 +20,7 @@ from lib.utils import is_graphql, draw_art
 
 parser = OptionParser(usage='%prog -t http://example.com -o json')
 parser.add_option('-t', '--target', dest='url', help='target url with the path')
-parser.add_option('-H', '--header', dest='header', help='Append Header to the request ("Authorization: XYZY")')
+parser.add_option('-H', '--header', dest='header', help='Append Header to the request \'{"Authorizathion": "Bearer eyjt"}\'')
 parser.add_option('-o', '--output', dest='output_json', 
                         help='Output results to stdout (JSON)', default=False)
 parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False, 
@@ -46,9 +47,12 @@ else:
     proxy = {}
 
 if options.header != None:
-    HEADERS.update({ options.header.split(': ')[0] : options.header.split(': ')[1]})
+    try:
+        extra_headers = loads(options.header)
+        HEADERS.update(extra_headers)
+    except:
+        print("Cannot cast %s into header dictionary. Ensure the format \'{\"key\": \"value\"}\'."%(options.header))
 
-print(HEADERS)
 url = options.url
 
 if not is_graphql(url, proxy, HEADERS):
