@@ -1,6 +1,6 @@
 """Helper parts for graphql-cop."""
 import requests
-from config import HEADERS
+#from config import HEADERS
 from version import VERSION
 
 requests.packages.urllib3.disable_warnings()
@@ -14,23 +14,22 @@ def get_error(resp):
       pass
   return error
 
-
-def graph_query(url, operation='query', payload={}):
+def graph_query(url, proxies, headers, operation='query', payload={}):
   """Perform a query."""
   try:
     response = requests.post(url,
-                            headers=HEADERS,
+                            headers=headers,
                             cookies=None,
                             verify=False,
                             allow_redirects=True,
                             timeout=60,
+                            proxies=proxies,
                             json={operation:payload})
     return response.json()
   except:
     return {}
 
-
-def graph_batch_query(url, operation='query', payload={}, batch=10):
+def graph_batch_query(url, proxies, headers, operation='query', payload={}, batch=10):
   """Perform a batch query."""
   try:
     batch_query = []
@@ -39,40 +38,40 @@ def graph_batch_query(url, operation='query', payload={}, batch=10):
       batch_query.append({operation:payload})
     
     response = requests.post(url,
-                            headers={'User-Agent':'graphql-cop'},
+                            headers=headers,
                             cookies=None,
                             verify=False,
                             allow_redirects=True,
                             timeout=5,
+                            proxies=proxies,
                             json=batch_query)
     return response.json()
   except:
     return {}
 
-
-def request_get(url, params=None):
+def request_get(url, proxies, headers, params=None):
   """Perform requests."""
   try:
     response = requests.get(url,
                             params=params,
-                            headers={'User-Agent':'graphql-cop'},
+                            headers=headers,
                             cookies=None,
                             verify=False,
                             allow_redirects=True,
+                            proxies=proxies,
                             timeout=5)
     return response
   except:
     return None
 
-
-def is_graphql(url):
+def is_graphql(url, proxies, headers):
   """Check if the URL provides a GraphQL interface."""
   query = '''
     query {
       __typename
     }
   '''
-  response = graph_query(url, payload=query)
+  response = graph_query(url, proxies, headers, payload=query)
   if response.get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
     return True
   elif response.get('errors') and (any('locations' in i for i in response['errors']) or (any('extensions' in i for i in response))):
