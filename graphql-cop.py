@@ -61,82 +61,64 @@ if not is_graphql(url, proxy, HEADERS):
 
 json_output = {}
 
-"""
-    Field Suggestions
-"""
 if field_suggestions(url, proxy, HEADERS):
+# Field Suggestions
     json_output['Field Suggestions'] = {}
     json_output['Field Suggestions']['severity'] = 'LOW'
     json_output['Field Suggestions']['impact'] = 'Information Leakage'
     json_output['Field Suggestions']['description'] = 'Field Suggestions are Enabled'
 
-"""
-    Introspection
-"""
 if introspection(url, proxy, HEADERS):
+# Introspection
     json_output['Introspection'] = {}
     json_output['Introspection']['severity'] = 'HIGH'
     json_output['Introspection']['impact'] = 'Information Leakage'
     json_output['Introspection']['description'] = 'Introspection Query Enabled'
 
-"""
-    Playground
-"""
 if detect_graphiql(url, proxy, HEADERS):
+# Playground
     json_output['GraphiQL Playground'] = {}
     json_output['GraphiQL Playground']['severity'] = 'LOW'
     json_output['GraphiQL Playground']['impact'] = 'Information Leakage'
     json_output['GraphiQL Playground']['description'] = 'GraphiQL Explorer Enabled'
 
-"""
-    HTTP GET method support
-"""
 if get_method_support(url, proxy, HEADERS):
+# HTTP GET method support
     json_output['Possible CSRF (GET)'] = {}
     json_output['Possible CSRF (GET)']['severity'] = 'LOW'
     json_output['Possible CSRF (GET)']['impact'] = 'Possible CSRF'
     json_output['Possible CSRF (GET)']['description'] = 'HTTP GET method supported (maybe CSRF)'
     
-"""
-    Alias Overloading
-"""
 if alias_overloading(url, proxy, HEADERS):
+# Alias Overloading
     json_output['Alias Overloading'] = {}
     json_output['Alias Overloading']['severity'] = 'HIGH'
     json_output['Alias Overloading']['impact'] = 'Denial of Service'
     json_output['Alias Overloading']['description'] = 'Alias Overloading with 100+ aliases is allowed'
 
-"""
-    Batch Queries
-"""
 if batch_query(url, proxy, HEADERS):
+# Batch Queries
     json_output['Batch Queries'] = {}
     json_output['Batch Queries']['severity'] = 'HIGH'
     json_output['Batch Queries']['impact'] = 'Denial of Service'
     json_output['Batch Queries']['description'] = 'Batch queries allowed with 10+ simultaneous queries)'
 
-"""
-    Field Duplication
-"""
 if field_duplication(url, proxy, HEADERS):
+# Field Duplication
     json_output['Field Duplication'] = {}
     json_output['Field Duplication']['severity'] = 'HIGH'
     json_output['Field Duplication']['impact'] = 'Denial of Service'
     json_output['Field Duplication']['description'] = 'Queries are allowed with 500 of the same repeated field'
 
-"""
-    Tracing mode
-"""
 if trace_mode(url, proxy, HEADERS):
+# Tracing mode
     json_output['Tracing Mode'] = {}
     json_output['Tracing Mode']['severity'] = 'INFORMATIONAL'
     json_output['Tracing Mode']['impact'] = 'Information Leakage'
     json_output['Tracing Mode']['description'] = 'Tracing is enabled'
 
-"""
-    Directive Overloading
-"""
 if directive_overloading(url, proxy, HEADERS):
+# Directive Overloading
     json_output['Directive Overloading'] = {}
     json_output['Directive Overloading']['severity'] = 'HIGH'
     json_output['Directive Overloading']['impact'] = 'Denial of Service'

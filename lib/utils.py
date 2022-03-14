@@ -1,3 +1,4 @@
+"""Helper parts for graphql-cop."""
 import requests
 #from config import HEADERS
 from version import VERSION
@@ -5,6 +6,7 @@ from version import VERSION
 requests.packages.urllib3.disable_warnings()
 
 def get_error(resp):
+  """Collect the error."""
   error = None
   try:
       error = resp['errors'][0]['message']
@@ -13,6 +15,7 @@ def get_error(resp):
   return error
 
 def graph_query(url, proxies, headers, operation='query', payload={}):
+  """Perform a query."""
   try:
     response = requests.post(url,
                             headers=headers,
@@ -27,6 +30,7 @@ def graph_query(url, proxies, headers, operation='query', payload={}):
     return {}
 
 def graph_batch_query(url, proxies, headers, operation='query', payload={}, batch=10):
+  """Perform a batch query."""
   try:
     batch_query = []
     
@@ -46,6 +50,7 @@ def graph_batch_query(url, proxies, headers, operation='query', payload={}, batc
     return {}
 
 def request_get(url, proxies, headers, params=None):
+  """Perform requests."""
   try:
     response = requests.get(url,
                             params=params,
@@ -60,6 +65,7 @@ def request_get(url, proxies, headers, params=None):
     return None
 
 def is_graphql(url, proxies, headers):
+  """Check if the URL provides a GraphQL interface."""
   query = '''
     query {
       __typename
@@ -76,6 +82,7 @@ def is_graphql(url, proxies, headers):
     return False
 
 def draw_art():
+  """Create banner."""
   return '''
                 GraphQL Cop {version}
            Security Auditor for GraphQL

@@ -1,3 +1,4 @@
+"""Constants for grapql-cop."""
 from version import VERSION
 
 HEADERS = {

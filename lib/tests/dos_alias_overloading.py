@@ -1,6 +1,9 @@
+"""Alias overloading tests."""
 from lib.utils import graph_query, get_error
 
+
 def alias_overloading(url):
+  """Check for alias overloading."""
   result = False
   aliases = ''
   

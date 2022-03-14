@@ -1,6 +1,9 @@
+"""Collect all supported methods."""
 from lib.utils import request_get
 
+
 def get_method_support(url):
+  """Get the supported methods."""
   result = False
 
   q = '{__typename}'
