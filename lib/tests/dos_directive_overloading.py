@@ -1,6 +1,9 @@
+"""Directive overloading tests."""
 from lib.utils import graph_query, get_error
 
+
 def directive_overloading(url):
+  """Check for directive overloading."""
   result = False
   
   q = 'query { __typename @aa@aa@aa@aa@aa@aa@aa@aa@aa@aa }'

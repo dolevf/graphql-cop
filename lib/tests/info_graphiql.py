@@ -1,7 +1,10 @@
+"""Collect GraphiQL details."""
 from urllib.parse import urlparse
 from lib.utils import request_get
 
+
 def detect_graphiql(url):
+  """Get GraphiQL."""
   result = False
 
   heuristics = ('graphiql.min.css', 'GraphQL Playground', 'GraphiQL', 'graphql-playground')

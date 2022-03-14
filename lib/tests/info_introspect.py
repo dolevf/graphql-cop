@@ -1,6 +1,9 @@
+"""Perform introspection tests."""
 from lib.utils import graph_query
 
+
 def introspection(url):
+  """Run introspection."""
   result = False
 
   q = 'query { __schema { types { name fields { name } } } }'

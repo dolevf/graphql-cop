@@ -1,6 +1,9 @@
+"""Field suggestions tests."""
 from lib.utils import graph_query, get_error
 
+
 def field_suggestions(url):
+  """Retrieve field suggestions."""
   result = False
 
   q = 'query { __schema { directive } }'    
