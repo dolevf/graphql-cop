@@ -21,7 +21,7 @@ from lib.utils import is_graphql, draw_art
 parser = OptionParser(usage='%prog -t http://example.com -o json')
 parser.add_option('-t', '--target', dest='url', help='target url with the path')
 parser.add_option('-H', '--header', dest='header', help='Append Header to the request \'{"Authorizathion": "Bearer eyjt"}\'')
-parser.add_option('-o', '--output', dest='output_json', 
+parser.add_option('-o', '--output', dest='output_json',
                         help='Output results to stdout (JSON)', default=False)
 parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False,
                         help='Sends the request through http://127.0.0.1:8080 proxy')
