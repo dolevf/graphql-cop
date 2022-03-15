@@ -1,5 +1,5 @@
 """Alias overloading tests."""
-from lib.utils import graph_query, get_error
+from lib.utils import graph_query
 
 
 def alias_overloading(url, proxy, headers):
@@ -17,5 +17,5 @@ def alias_overloading(url, proxy, headers):
       result = True
   except:
     pass
-  
+
   return result

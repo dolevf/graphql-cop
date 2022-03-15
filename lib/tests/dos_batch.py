@@ -1,5 +1,5 @@
 """Batch tests."""
-from lib.utils import graph_batch_query, get_error
+from lib.utils import graph_batch_query
 
 
 def batch_query(url, proxy, headers):

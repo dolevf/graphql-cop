@@ -1,5 +1,5 @@
 """Collect trace mode details."""
-from lib.utils import graph_query, get_error
+from lib.utils import graph_query
 
 
 def trace_mode(url, proxy, headers):

@@ -1,6 +1,5 @@
 """Directive overloading tests."""
-from lib.utils import graph_query, get_error
-
+from lib.utils import graph_query
 
 def directive_overloading(url, proxy, headers):
   """Check for directive overloading."""
