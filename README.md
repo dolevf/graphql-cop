@@ -23,10 +23,10 @@ GraphQL Cop is a small Python utility to run common security tests against Graph
 ```
 $ python3 graphql-cop.py -t https://mywebsite.com/graphql
 
-                GraphQL Cop 1.0
+                GraphQL Cop 1.1
            Security Auditor for GraphQL
             Dolev Farhi & Nick Aleks
-  
+
 Starting...
 [HIGH] Introspection Query Enabled (Information Leakage)
 [LOW] GraphQL Playground UI (Information Leakage)
@@ -41,12 +41,12 @@ python3 main.py -t https://mywebsite.com/graphql -o json
 Using `graphql-cop` through a Proxy (Eg: Burp Suite) and adding custom headers (Eg: Authorization):
 
 ```
-$ python3 graphql-cop.py -t https://mywebsite.com/graphql --proxy --header '{"Authorizathion": "Bearer token_here"}'
+$ python3 graphql-cop.py -t https://mywebsite.com/graphql --proxy --header '{"Authorization": "Bearer token_here"}'
 
                 GraphQL Cop 1.0
            Security Auditor for GraphQL
             Dolev Farhi & Nick Aleks
-  
+
 Starting...
 [HIGH] Introspection Query Enabled (Information Leakage)
 [LOW] GraphQL Playground UI (Information Leakage)
