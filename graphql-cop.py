@@ -23,9 +23,9 @@ parser.add_option('-t', '--target', dest='url', help='target url with the path')
 parser.add_option('-H', '--header', dest='header', help='Append Header to the request \'{"Authorizathion": "Bearer eyjt"}\'')
 parser.add_option('-o', '--output', dest='output_json', 
                         help='Output results to stdout (JSON)', default=False)
-parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False, 
-                        help='Sends the request throug http://127.0.0.1:8080 proxy')
-parser.add_option('--version', '-v', dest='version', action='store_true', default=False, 
+parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False,
+                        help='Sends the request through http://127.0.0.1:8080 proxy')
+parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                         help='Print out the current version and exit.')
 options, args = parser.parse_args()
 
@@ -88,7 +88,7 @@ if get_method_support(url, proxy, HEADERS):
     json_output['Possible CSRF (GET)']['severity'] = 'LOW'
     json_output['Possible CSRF (GET)']['impact'] = 'Possible CSRF'
     json_output['Possible CSRF (GET)']['description'] = 'HTTP GET method supported (maybe CSRF)'
-    
+
 if alias_overloading(url, proxy, HEADERS):
 # Alias Overloading
     json_output['Alias Overloading'] = {}

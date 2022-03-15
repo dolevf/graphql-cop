@@ -33,10 +33,10 @@ def graph_batch_query(url, proxies, headers, operation='query', payload={}, batc
   """Perform a batch query."""
   try:
     batch_query = []
-    
+
     for _ in range(0, batch+1):
       batch_query.append({operation:payload})
-    
+
     response = requests.post(url,
                             headers=headers,
                             cookies=None,
