@@ -5,6 +5,7 @@ from optparse import OptionParser
 from version import VERSION
 from config import HEADERS
 from json import loads
+from urllib.parse import urlparse
 
 from lib.tests.info_field_suggestions import field_suggestions
 from lib.tests.info_introspect import introspection
@@ -53,7 +54,11 @@ if options.header != None:
     except:
         print("Cannot cast %s into header dictionary. Ensure the format \'{\"key\": \"value\"}\'."%(options.header))
 
-url = options.url
+if not urlparse(options.url).scheme:
+    print("Url missing scheme (http:// or https://). Ensure Url contains a scheme.")
+    sys.exit(1)
+else:
+    url = options.url
 
 if not is_graphql(url, proxy, HEADERS):
     print(url, 'does not seem to be running GraphQL.')
