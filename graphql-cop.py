@@ -74,8 +74,7 @@ for test in tests:
     json_output.append(test(url, proxy, HEADERS))
     
 if options.output_json == 'json':
-    from pprint import pprint
-    pprint(json_output)
+    print(json_output)
 else:
     for i in json_output:
         print('[{}] {} - {} ({})'.format(i['severity'], i['title'], i['description'], i['impact']))
