@@ -1,18 +1,26 @@
 """Perform introspection tests."""
-from lib.utils import graph_query
+from lib.utils import graph_query, curlify
 
 
 def introspection(url, proxy, headers):
   """Run introspection."""
-  result = False
+  res = {
+    'result':False,
+    'title':'Introspection',
+    'description':'Introspection Query Enabled',
+    'impact':'Information Leakage',
+    'severity':'HIGH',
+    'curl_verify':''
+  }
 
   q = 'query { __schema { types { name fields { name } } } }'
 
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload=q)
+  res['curl_verify'] = curlify(gql_response)
   try:
-    if gql_response['data']['__schema']['types']:
-      result = True
+    if gql_response.json()['data']['__schema']['types']:
+      res['result'] = True
   except:
     pass
 
-  return result
+  return res

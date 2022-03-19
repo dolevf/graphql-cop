@@ -1,10 +1,10 @@
 #!/usr/env/python3
 import sys
 
+from json import loads
 from optparse import OptionParser
 from version import VERSION
 from config import HEADERS
-from json import loads
 from urllib.parse import urlparse
 
 from lib.tests.info_field_suggestions import field_suggestions
@@ -21,7 +21,7 @@ from lib.utils import is_graphql, draw_art
 
 parser = OptionParser(usage='%prog -t http://example.com -o json')
 parser.add_option('-t', '--target', dest='url', help='target url with the path')
-parser.add_option('-H', '--header', dest='header', help='Append Header to the request \'{"Authorizathion": "Bearer eyjt"}\'')
+parser.add_option('-H', '--header', dest='header', help='Append Header to the request \'{"Authorization": "Bearer eyjt"}\'')
 parser.add_option('-o', '--output', dest='output_json',
                         help='Output results to stdout (JSON)', default=False)
 parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False,
@@ -55,7 +55,7 @@ if options.header != None:
         print("Cannot cast %s into header dictionary. Ensure the format \'{\"key\": \"value\"}\'."%(options.header))
 
 if not urlparse(options.url).scheme:
-    print("Url missing scheme (http:// or https://). Ensure Url contains a scheme.")
+    print("URL missing scheme (http:// or https://). Ensure ULR contains some scheme.")
     sys.exit(1)
 else:
     url = options.url
@@ -64,73 +64,19 @@ if not is_graphql(url, proxy, HEADERS):
     print(url, 'does not seem to be running GraphQL.')
     sys.exit(1)
 
-json_output = {}
+tests = [field_suggestions, introspection, detect_graphiql, 
+         get_method_support, alias_overloading, batch_query,
+         field_duplication, trace_mode, directive_overloading]
 
-if field_suggestions(url, proxy, HEADERS):
-# Field Suggestions
-    json_output['Field Suggestions'] = {}
-    json_output['Field Suggestions']['severity'] = 'LOW'
-    json_output['Field Suggestions']['impact'] = 'Information Leakage'
-    json_output['Field Suggestions']['description'] = 'Field Suggestions are Enabled'
+json_output = []
 
-if introspection(url, proxy, HEADERS):
-# Introspection
-    json_output['Introspection'] = {}
-    json_output['Introspection']['severity'] = 'HIGH'
-    json_output['Introspection']['impact'] = 'Information Leakage'
-    json_output['Introspection']['description'] = 'Introspection Query Enabled'
-
-if detect_graphiql(url, proxy, HEADERS):
-# Playground
-    json_output['GraphiQL Playground'] = {}
-    json_output['GraphiQL Playground']['severity'] = 'LOW'
-    json_output['GraphiQL Playground']['impact'] = 'Information Leakage'
-    json_output['GraphiQL Playground']['description'] = 'GraphiQL Explorer Enabled'
-
-if get_method_support(url, proxy, HEADERS):
-# HTTP GET method support
-    json_output['Possible CSRF (GET)'] = {}
-    json_output['Possible CSRF (GET)']['severity'] = 'LOW'
-    json_output['Possible CSRF (GET)']['impact'] = 'Possible CSRF'
-    json_output['Possible CSRF (GET)']['description'] = 'HTTP GET method supported (maybe CSRF)'
-
-if alias_overloading(url, proxy, HEADERS):
-# Alias Overloading
-    json_output['Alias Overloading'] = {}
-    json_output['Alias Overloading']['severity'] = 'HIGH'
-    json_output['Alias Overloading']['impact'] = 'Denial of Service'
-    json_output['Alias Overloading']['description'] = 'Alias Overloading with 100+ aliases is allowed'
-
-if batch_query(url, proxy, HEADERS):
-# Batch Queries
-    json_output['Batch Queries'] = {}
-    json_output['Batch Queries']['severity'] = 'HIGH'
-    json_output['Batch Queries']['impact'] = 'Denial of Service'
-    json_output['Batch Queries']['description'] = 'Batch queries allowed with 10+ simultaneous queries)'
-
-if field_duplication(url, proxy, HEADERS):
-# Field Duplication
-    json_output['Field Duplication'] = {}
-    json_output['Field Duplication']['severity'] = 'HIGH'
-    json_output['Field Duplication']['impact'] = 'Denial of Service'
-    json_output['Field Duplication']['description'] = 'Queries are allowed with 500 of the same repeated field'
-
-if trace_mode(url, proxy, HEADERS):
-# Tracing mode
-    json_output['Tracing Mode'] = {}
-    json_output['Tracing Mode']['severity'] = 'INFORMATIONAL'
-    json_output['Tracing Mode']['impact'] = 'Information Leakage'
-    json_output['Tracing Mode']['description'] = 'Tracing is enabled'
-
-if directive_overloading(url, proxy, HEADERS):
-# Directive Overloading
-    json_output['Directive Overloading'] = {}
-    json_output['Directive Overloading']['severity'] = 'HIGH'
-    json_output['Directive Overloading']['impact'] = 'Denial of Service'
-    json_output['Directive Overloading']['description'] = 'Multiple duplicated directives allowed in a query'
-
+for test in tests:
+    json_output.append(test(url, proxy, HEADERS))
+    
 if options.output_json == 'json':
-    print(json_output)
+    from pprint import pprint
+    pprint(json_output)
 else:
-    for k, v in json_output.items():
-        print('[{}] {} - {} ({})'.format(v['severity'], k, v['description'], v['impact']))
+    for i in json_output:
+        print('[{}] {} - {} ({})'.format(i['severity'], i['title'], i['description'], i['impact']))
+    

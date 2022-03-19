@@ -1,21 +1,30 @@
 """Alias overloading tests."""
-from lib.utils import graph_query
+from lib.utils import graph_query, curlify
 
 
 def alias_overloading(url, proxy, headers):
   """Check for alias overloading."""
-  result = False
+  res = {
+    'result':False,
+    'title':'Alias Overloading',
+    'description':'Alias Overloading with 100+ aliases is allowed',
+    'impact':'Denial of Service',
+    'severity':'HIGH',
+    'curl_verify':''
+  }
   aliases = ''
 
   for i in range(0, 101):
      aliases += 'alias{}:__typename \n'.format(i)
 
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload='query { ' + aliases + ' }')
-
+  
+  res['curl_verify'] = curlify(gql_response)
+  
   try:
-    if gql_response['data']['alias100']:
-      result = True
+    if gql_response.json()['data']['alias100']:
+      res['result'] = True
   except:
     pass
 
-  return result
+  return res

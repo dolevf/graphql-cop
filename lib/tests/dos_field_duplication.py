@@ -1,18 +1,27 @@
 """Field duplication tests."""
-from lib.utils import graph_query
+from lib.utils import graph_query, curlify
 
 
 def field_duplication(url, proxy, headers):
   """Check for field duplication."""
-  result = False
+  res = {
+    'result':False,
+    'title':'Field Duplication',
+    'description':'Queries are allowed with 500 of the same repeated field',
+    'impact':'Denial of Service',
+    'severity':'HIGH',
+    'curl_verify':''
+  }
 
   duplicated_string = '__typename \n' * 500
   q = 'query { ' + duplicated_string + '} '
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload=q)
+  res['curl_verify'] = curlify(gql_response)
+  
   try:
-    if gql_response['data']['__typename']:
-      result = True
+    if gql_response.json()['data']['__typename']:
+      res['result'] = True
   except:
     pass
 
-  return result
+  return res
