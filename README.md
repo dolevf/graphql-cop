@@ -20,6 +20,7 @@ GraphQL Cop allows you to reproduce the findings by providing cURL commands upon
 - Introspection (Info Leak)
 - Directives Overloading (DoS)
 - Circular Query using Introspection (DoS)
+- Circular Fragment (DoS)
 
 ## Usage
 
