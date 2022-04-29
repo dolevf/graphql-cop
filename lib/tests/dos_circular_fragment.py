@@ -33,7 +33,6 @@ def circular_fragment(url, proxy, headers):
   res['curl_verify'] = curlify(gql_response)
   
   try:
-    print(gql_response.json())
     if not 'errors' in gql_response.json():
       res['result'] = True
   except:
