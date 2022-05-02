@@ -7,7 +7,7 @@ def batch_query(url, proxy, headers):
   res = {
     'result':False,
     'title':'Array-based Query Batching',
-    'description':'Batch queries allowed with 10+ simultaneous queries)',
+    'description':'Batch queries allowed with 10+ simultaneous queries',
     'impact':'Denial of Service',
     'severity':'HIGH',
     'curl_verify':''
