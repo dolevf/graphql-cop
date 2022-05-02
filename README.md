@@ -20,6 +20,7 @@ GraphQL Cop allows you to reproduce the findings by providing cURL commands upon
 - Introspection (Info Leak)
 - Directives Overloading (DoS)
 - Circular Query using Introspection (DoS)
+- Circular Fragment (DoS)
 
 ## Usage
 
@@ -58,7 +59,7 @@ Starting...
 
 Test a website, dump to a parse-able JSON output, cURL reproduction command
 ```
-python3 main.py -t https://mywebsite.com/graphql -o json
+python3 graphql-cop.py -t https://mywebsite.com/graphql -o json
 
  {'curl_verify': 'curl -X POST -H "User-Agent: graphql-cop/1.2" -H '
                  '"Accept-Encoding: gzip, deflate" -H "Accept: */*" -H '

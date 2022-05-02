@@ -17,6 +17,7 @@ from lib.tests.dos_field_duplication import field_duplication
 from lib.tests.dos_directive_overloading import directive_overloading
 from lib.tests.info_trace_mode import trace_mode
 from lib.tests.dos_circular_introspection import circular_query_introspection
+from lib.tests.dos_circular_fragment import circular_fragment
 from lib.utils import is_graphql, draw_art
 
 
@@ -68,7 +69,7 @@ if not is_graphql(url, proxy, HEADERS):
 tests = [field_suggestions, introspection, detect_graphiql, 
          get_method_support, alias_overloading, batch_query,
          field_duplication, trace_mode, directive_overloading,
-         circular_query_introspection]
+         circular_query_introspection, circular_fragment]
 
 json_output = []
 
