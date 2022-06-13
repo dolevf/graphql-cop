@@ -15,7 +15,6 @@ def get_based_mutation(url, proxies, headers):
   q = 'mutation {__typename}'
 
   response = request_get(url, proxies=proxies, headers=headers, params={'query':q})
-  print(response.text)
   res['curl_verify'] = curlify(response)
   
   try:
