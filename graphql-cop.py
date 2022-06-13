@@ -18,14 +18,15 @@ from lib.tests.dos_directive_overloading import directive_overloading
 from lib.tests.info_trace_mode import trace_mode
 from lib.tests.dos_circular_introspection import circular_query_introspection
 from lib.tests.dos_circular_fragment import circular_fragment
+from lib.tests.info_get_based_mutation import get_based_mutation
 from lib.utils import is_graphql, draw_art
 
 
 parser = OptionParser(usage='%prog -t http://example.com -o json')
 parser.add_option('-t', '--target', dest='url', help='target url with the path')
 parser.add_option('-H', '--header', dest='header', help='Append Header to the request \'{"Authorization": "Bearer eyjt"}\'')
-parser.add_option('-o', '--output', dest='output_json',
-                        help='Output results to stdout (JSON)', default=False)
+parser.add_option('-o', '--output', dest='format',
+                        help='json', default=False)
 parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False,
                         help='Sends the request through http://127.0.0.1:8080 proxy')
 parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
@@ -69,16 +70,18 @@ if not is_graphql(url, proxy, HEADERS):
 tests = [field_suggestions, introspection, detect_graphiql, 
          get_method_support, alias_overloading, batch_query,
          field_duplication, trace_mode, directive_overloading,
-         circular_query_introspection, circular_fragment]
+         circular_query_introspection, circular_fragment,
+         get_based_mutation]
 
 json_output = []
 
 for test in tests:
     json_output.append(test(url, proxy, HEADERS))
     
-if options.output_json == 'json':
+if options.format == 'json':
     print(json_output)
 else:
     for i in json_output:
-        print('[{}] {} - {} ({})'.format(i['severity'], i['title'], i['description'], i['impact']))
+        if i['result']:
+            print('[{}] {} - {} ({})'.format(i['severity'], i['title'], i['description'], i['impact']))
     
