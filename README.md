@@ -13,6 +13,7 @@ GraphQL Cop allows you to reproduce the findings by providing cURL commands upon
 - Alias Overloading (DoS)
 - Batch Queries (DoS)
 - GET based Queries (CSRF)
+- POST based Queries using urlencoded payloads (CSRF)
 - GraphQL Tracing / Debug Modes (Info Leak)
 - Field Duplication (DoS)
 - Field Suggestions (Info Leak)
@@ -20,7 +21,6 @@ GraphQL Cop allows you to reproduce the findings by providing cURL commands upon
 - Introspection (Info Leak)
 - Directives Overloading (DoS)
 - Circular Query using Introspection (DoS)
-- Circular Fragment (DoS)
 - Mutation support over GET methods (CSRF)
 
 ## Usage
