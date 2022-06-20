@@ -17,8 +17,8 @@ from lib.tests.dos_field_duplication import field_duplication
 from lib.tests.dos_directive_overloading import directive_overloading
 from lib.tests.info_trace_mode import trace_mode
 from lib.tests.dos_circular_introspection import circular_query_introspection
-from lib.tests.dos_circular_fragment import circular_fragment
 from lib.tests.info_get_based_mutation import get_based_mutation
+from lib.tests.info_post_based_csrf import post_based_csrf
 from lib.utils import is_graphql, draw_art
 
 
@@ -31,6 +31,7 @@ parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=Fa
                         help='Sends the request through http://127.0.0.1:8080 proxy')
 parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                         help='Print out the current version and exit.')
+
 options, args = parser.parse_args()
 
 if options.version:
@@ -67,21 +68,19 @@ if not is_graphql(url, proxy, HEADERS):
     print(url, 'does not seem to be running GraphQL.')
     sys.exit(1)
 
-tests = [field_suggestions, introspection, detect_graphiql, 
+tests = [field_suggestions, introspection, detect_graphiql,
          get_method_support, alias_overloading, batch_query,
          field_duplication, trace_mode, directive_overloading,
-         circular_query_introspection, circular_fragment,
-         get_based_mutation]
+         circular_query_introspection, get_based_mutation, post_based_csrf]
 
 json_output = []
 
 for test in tests:
     json_output.append(test(url, proxy, HEADERS))
-    
+
 if options.format == 'json':
     print(json_output)
 else:
     for i in json_output:
         if i['result']:
             print('[{}] {} - {} ({})'.format(i['severity'], i['title'], i['description'], i['impact']))
-    

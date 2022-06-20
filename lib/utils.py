@@ -51,21 +51,24 @@ def graph_query(url, proxies, headers, operation='query', payload={}, batch=Fals
     return {}
 
 
-def request_get(url, proxies, headers, params=None, data=None):
+def request(url, proxies, headers, params=None, data=None, verb='GET'):
   """Perform requests."""
   try:
-    response = requests.get(url,
+    response = requests.request(verb,
+                            url=url,
                             params=params,
                             headers=headers,
                             cookies=None,
                             verify=False,
                             allow_redirects=True,
                             proxies=proxies,
-                            timeout=5, 
+                            timeout=5,
                             data=data)
     return response
   except:
     return None
+
+
 
 def is_graphql(url, proxies, headers):
   """Check if the URL provides a GraphQL interface."""

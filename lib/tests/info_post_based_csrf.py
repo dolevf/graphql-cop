@@ -1,20 +1,20 @@
-"""Checks mutation support over on GET."""
+"""Checks if queries are allowed over POST not in JSON."""
 from lib.utils import request, curlify
 
 
-def get_based_mutation(url, proxies, headers):
+def post_based_csrf(url, proxies, headers):
   res = {
     'result':False,
-    'title':'Mutation is allowed over GET (possible CSRF)',
-    'description':'GraphQL mutations allowed using the GET method',
+    'title':'POST based url-encoded query (possible CSRF)',
+    'description':'GraphQL accepts non-JSON queries over POST',
     'impact':'Possible Cross Site Request Forgery',
     'severity':'MEDIUM',
     'curl_verify':''
   }
 
-  q = 'mutation {__typename}'
+  q = 'query {__typename}'
 
-  response = request(url, proxies=proxies, headers=headers, params={'query':q})
+  response = request(url, proxies=proxies, headers=headers, params={'query':q}, verb='POST')
   res['curl_verify'] = curlify(response)
 
   try:

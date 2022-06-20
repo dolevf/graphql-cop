@@ -1,6 +1,6 @@
 """Collect GraphiQL details."""
 from urllib.parse import urlparse
-from lib.utils import request_get, curlify
+from lib.utils import request, curlify
 
 
 def detect_graphiql(url, proxy, headers):
@@ -21,7 +21,7 @@ def detect_graphiql(url, proxy, headers):
   url = '{}://{}'.format(parsed.scheme, parsed.netloc)
 
   for endpoint in endpoints:
-    response = request_get(url + endpoint, proxies=proxy, headers=headers)
+    response = request(url + endpoint, proxies=proxy, headers=headers)
     res['curl_verify'] = curlify(response)
     try:
       if response and any(word in response.text for word in heuristics):
