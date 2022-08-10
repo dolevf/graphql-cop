@@ -1,5 +1,10 @@
 # GraphQL Cop - Security Audit Utility for GraphQL
 
+<p align="center">
+  <img src="https://github.com/dolevf/graphql-cop/blob/master/static/images/logo.png?raw=true" width="300px" alt="GraphQL Cop"/>
+</p>
+
+
 ## About
 GraphQL Cop is a small Python utility to run common security tests against GraphQL APIs. GraphQL Cop is perfect for running CI/CD checks in GraphQL. It is lightweight, and covers interesting security issues in GraphQL.
 
