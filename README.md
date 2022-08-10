@@ -1,7 +1,7 @@
 # GraphQL Cop - Security Audit Utility for GraphQL
 
 <p align="center">
-  <img src="https://github.com/dolevf/graphql-cop/blob/main/static/images/logo.png?raw=true" width="300px" alt="GraphQL Cop"/>
+  <img src="https://github.com/dolevf/graphql-cop/blob/main/static/images/logo.png?raw=true" width="500px" alt="GraphQL Cop"/>
 </p>
 
 
