@@ -18,7 +18,6 @@ def unhandled_error_detection(url, proxy, headers):
   res['curl_verify'] = curlify(gql_response)
 
   try:
-    #if gql_response.json()['errors'][0]['extensions']['exception']:
     if gql_response.json()['errors'][0]['extensions']['exception']:
       res['result'] = True
     elif 'exception' in str(gql_response.json()).lower():
