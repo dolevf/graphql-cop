@@ -12,11 +12,10 @@ def get_based_mutation(url, proxies, headers):
     'curl_verify':''
   }
 
-  q = 'mutation {__typename}'
+  q = 'mutation cop {__typename}'
 
   response = request(url, proxies=proxies, headers=headers, params={'query':q})
   res['curl_verify'] = curlify(response)
-
   try:
     if response and response.json()['data']['__typename']:
         res['result'] = True

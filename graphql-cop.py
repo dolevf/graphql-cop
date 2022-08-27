@@ -19,6 +19,7 @@ from lib.tests.info_trace_mode import trace_mode
 from lib.tests.dos_circular_introspection import circular_query_introspection
 from lib.tests.info_get_based_mutation import get_based_mutation
 from lib.tests.info_post_based_csrf import post_based_csrf
+from lib.tests.info_unhandled_error import unhandled_error_detection
 from lib.utils import is_graphql, draw_art
 
 
@@ -71,7 +72,8 @@ if not is_graphql(url, proxy, HEADERS):
 tests = [field_suggestions, introspection, detect_graphiql,
          get_method_support, alias_overloading, batch_query,
          field_duplication, trace_mode, directive_overloading,
-         circular_query_introspection, get_based_mutation, post_based_csrf]
+         circular_query_introspection, get_based_mutation, post_based_csrf,
+         unhandled_error_detection]
 
 json_output = []
 

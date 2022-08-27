@@ -13,7 +13,7 @@ def batch_query(url, proxy, headers):
     'curl_verify':''
   }
 
-  gql_response = graph_query(url, proxies=proxy, headers=headers, payload='query { __typename }', batch=True)
+  gql_response = graph_query(url, proxies=proxy, headers=headers, payload='query cop { __typename }', batch=True)
   
   res['curl_verify'] = curlify(gql_response)
   

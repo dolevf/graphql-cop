@@ -14,10 +14,10 @@ def field_duplication(url, proxy, headers):
   }
 
   duplicated_string = '__typename \n' * 500
-  q = 'query { ' + duplicated_string + '} '
+  q = 'query cop { ' + duplicated_string + '} '
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload=q)
   res['curl_verify'] = curlify(gql_response)
-  
+
   try:
     if gql_response.json()['data']['__typename']:
       res['result'] = True

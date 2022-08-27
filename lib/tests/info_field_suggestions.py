@@ -13,10 +13,9 @@ def field_suggestions(url, proxy, headers):
     'curl_verify':''
   }
 
-  q = 'query { __schema { directive } }'
+  q = 'query cop { __schema { directive } }'
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload=q)
   res['curl_verify'] = curlify(gql_response)
-  
 
   try:
     if 'Did you mean' in get_error(gql_response.json()):

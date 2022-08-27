@@ -13,10 +13,10 @@ def directive_overloading(url, proxy, headers):
     'curl_verify':''
   }
 
-  q = 'query { __typename @aa@aa@aa@aa@aa@aa@aa@aa@aa@aa }'
+  q = 'query cop { __typename @aa@aa@aa@aa@aa@aa@aa@aa@aa@aa }'
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload=q)
   res['curl_verify'] = curlify(gql_response)
-  
+
   try:
     if len(gql_response.json()['errors']) == 10:
       res['result'] = True

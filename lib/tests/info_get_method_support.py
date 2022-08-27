@@ -13,7 +13,7 @@ def get_method_support(url, proxies, headers):
     'curl_verify':''
   }
 
-  q = '{__typename}'
+  q = 'query cop {__typename}'
 
   response = request(url, proxies=proxies, headers=headers, params={'query':q})
   res['curl_verify'] = curlify(response)

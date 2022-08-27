@@ -29,14 +29,12 @@ def get_error(resp):
 
 def graph_query(url, proxies, headers, operation='query', payload={}, batch=False):
   """Perform a query."""
-  
   if batch:
     data = []
     for _ in range(10):
       data.append({operation:payload})
   else:
-    data = {operation:payload}
-  
+    data = {operation:payload, "operationName":"cop"}
   try:
     response = requests.post(url,
                             headers=headers,
@@ -73,7 +71,7 @@ def request(url, proxies, headers, params=None, data=None, verb='GET'):
 def is_graphql(url, proxies, headers):
   """Check if the URL provides a GraphQL interface."""
   query = '''
-    query {
+    query cop {
       __typename
     }
   '''
@@ -86,9 +84,10 @@ def is_graphql(url, proxies, headers):
   except JSONDecodeError:
     return False
 
-  if response.json().get('data', {}).get('__typename', '') in ('Query', 'QueryRoot', 'query_root'):
-    return True
-  elif response.json().get('errors') and (any('locations' in i for i in response['errors']) or (any('extensions' in i for i in response))):
+  if 'data' in response.json() and response.json()['data'] != None:
+    if response.json()['data']['__typename'] in ('Query', 'QueryRoot', 'query_root', 'Root'):
+      return True
+  elif response.json().get('errors') and (any('locations' in i for i in response.json()['errors']) or (any('extensions' in i for i in response.json()))):
     return True
   elif response.json().get('data'):
     return True

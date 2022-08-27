@@ -17,10 +17,10 @@ def alias_overloading(url, proxy, headers):
   for i in range(0, 101):
      aliases += 'alias{}:__typename \n'.format(i)
 
-  gql_response = graph_query(url, proxies=proxy, headers=headers, payload='query { ' + aliases + ' }')
-  
+  gql_response = graph_query(url, proxies=proxy, headers=headers, payload='query cop { ' + aliases + ' }')
+
   res['curl_verify'] = curlify(gql_response)
-  
+
   try:
     if gql_response.json()['data']['alias100']:
       res['result'] = True
