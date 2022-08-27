@@ -13,7 +13,7 @@ def introspection(url, proxy, headers):
     'curl_verify':''
   }
 
-  q = 'query { __schema { types { name fields { name } } } }'
+  q = 'query cop { __schema { types { name fields { name } } } }'
 
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload=q)
   res['curl_verify'] = curlify(gql_response)
