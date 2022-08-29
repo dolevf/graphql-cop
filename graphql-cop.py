@@ -25,7 +25,7 @@ from lib.utils import is_graphql, draw_art
 
 parser = OptionParser(usage='%prog -t http://example.com -o json')
 parser.add_option('-t', '--target', dest='url', help='target url with the path')
-parser.add_option('-H', '--header', dest='header', help='Append Header to the request \'{"Authorization": "Bearer eyjt"}\'')
+parser.add_option('-H', '--header', dest='header', action='append', help='Append Header(s) to the request \'{"Authorization": "Bearer eyjt"}\' - Use multiple -H for multiple Headers')
 parser.add_option('-o', '--output', dest='format',
                         help='json', default=False)
 parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False,
@@ -54,8 +54,9 @@ else:
 
 if options.header != None:
     try:
-        extra_headers = loads(options.header)
-        HEADERS.update(extra_headers)
+        for l in options.header:
+            extra_headers = loads(l)
+            HEADERS.update(extra_headers)
     except:
         print("Cannot cast %s into header dictionary. Ensure the format \'{\"key\": \"value\"}\'."%(options.header))
 

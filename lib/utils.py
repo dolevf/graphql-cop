@@ -60,7 +60,7 @@ def request(url, proxies, headers, params=None, data=None, verb='GET'):
                             verify=False,
                             allow_redirects=True,
                             proxies=proxies,
-                            timeout=5,
+                            timeout=20,
                             data=data)
     return response
   except:
