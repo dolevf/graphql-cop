@@ -15,19 +15,23 @@ def detect_graphiql(url, proxy, headers):
   }
 
   heuristics = ('graphiql.min.css', 'GraphQL Playground', 'GraphiQL', 'graphql-playground')
-  endpoints = ['/graphiql', '/playground', '/console', '/graphql']
+  endpoints = ['graphiql', 'playground', 'console', 'graphql']
 
   parsed = urlparse(url)
-  url = '{}://{}'.format(parsed.scheme, parsed.netloc)
 
-  for endpoint in endpoints:
-    response = request(url + endpoint, proxies=proxy, headers=headers)
-    res['curl_verify'] = curlify(response)
-    try:
-      if response and any(word in response.text for word in heuristics):
-        res['result'] = True
-        break
-    except:
-      pass
+  truepath = ""
+  pathlist = parsed.path.split('/')
+  for p in range(0, len(pathlist)):
+    truepath += pathlist[p] + '/'
+    url = '{}://{}{}'.format(parsed.scheme, parsed.netloc, truepath)
+    for endpoint in endpoints:
+      response = request(url + endpoint, proxies=proxy, headers=headers)
+      res['curl_verify'] = curlify(response)
+      try:
+        if response and any(word in response.text for word in heuristics):
+          res['result'] = True
+          break
+      except:
+        pass
 
   return res
