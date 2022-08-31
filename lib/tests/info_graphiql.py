@@ -18,6 +18,9 @@ def detect_graphiql(url, proxy, headers):
   endpoints = ['graphiql', 'playground', 'console', 'graphql']
 
   parsed = urlparse(url)
+  if "Accept" in headers.keys():
+    backup_accept_header=headers["Accept"]
+  headers["Accept"]= "text/html"
 
   truepath = ""
   pathlist = parsed.path.split('/')
@@ -33,5 +36,9 @@ def detect_graphiql(url, proxy, headers):
           break
       except:
         pass
+
+  del headers["Accept"]
+  if 'backup_accept_header' in locals():
+    headers["Accept"]=backup_accept_header
 
   return res
