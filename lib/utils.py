@@ -11,7 +11,11 @@ def curlify(obj):
   method = req.method
   uri = req.url
   if req.body:
-    data = req.body.decode('UTF-8')
+    try:
+      data = req.body.decode('UTF-8')
+    except:
+      reqb = bytes(req.body, 'UTF-8')
+      data = reqb.decode('UTF-8')
   else:
     data = ''
   headers = ['"{0}: {1}"'.format(k, v) for k, v in req.headers.items()]

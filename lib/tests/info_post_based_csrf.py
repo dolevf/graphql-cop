@@ -14,7 +14,7 @@ def post_based_csrf(url, proxies, headers):
 
   q = 'query cop {__typename}'
 
-  response = request(url, proxies=proxies, headers=headers, params={'query':q}, verb='POST')
+  response = request(url, proxies=proxies, headers=headers, data={'query': q}, verb='POST')
   res['curl_verify'] = curlify(response)
 
   try:
