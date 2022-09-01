@@ -2,7 +2,6 @@
 from urllib.parse import urlparse
 from lib.utils import request, curlify
 
-
 def detect_graphiql(url, proxy, headers):
   """Get GraphiQL."""
   res = {
@@ -32,6 +31,7 @@ def detect_graphiql(url, proxy, headers):
       res['curl_verify'] = curlify(response)
       try:
         if response and any(word in response.text for word in heuristics):
+          detect_graphiql.GraphQLIDEpath = url + endpoint
           res['result'] = True
           break
       except:
