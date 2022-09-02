@@ -8,7 +8,7 @@ def trace_mode(url, proxy, headers):
     'result':False,
     'title':'Trace Mode',
     'description':'Tracing is Enabled',
-    'impact':'Information Leakage - ' + url,
+    'impact':'Information Leakage - /' + url.rsplit('/', 1)[-1],
     'severity':'INFO',
     'curl_verify':''
   }

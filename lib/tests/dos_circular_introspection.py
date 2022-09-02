@@ -7,7 +7,7 @@ def circular_query_introspection(url, proxy, headers):
     'result':False,
     'title':'Introspection-based Circular Query',
     'description':'Circular-query using Introspection',
-    'impact':'Denial of Service',
+    'impact':'Denial of Service - /' + url.rsplit('/', 1)[-1],
     'severity':'HIGH',
     'curl_verify':''
   }

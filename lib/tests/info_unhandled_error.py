@@ -8,7 +8,7 @@ def unhandled_error_detection(url, proxy, headers):
     'result':False,
     'title':'Unhandled Errors Detection',
     'description':'Exception errors are not handled',
-    'impact':'Information Leakage - ' + url,
+    'impact':'Information Leakage - /' + url.rsplit('/', 1)[-1],
     'severity':'INFO',
     'curl_verify':''
   }

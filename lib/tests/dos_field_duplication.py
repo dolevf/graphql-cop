@@ -8,7 +8,7 @@ def field_duplication(url, proxy, headers):
     'result':False,
     'title':'Field Duplication',
     'description':'Queries are allowed with 500 of the same repeated field',
-    'impact':'Denial of Service',
+    'impact':'Denial of Service - /' + url.rsplit('/', 1)[-1],
     'severity':'HIGH',
     'curl_verify':''
   }

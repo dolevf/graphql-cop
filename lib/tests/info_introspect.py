@@ -8,7 +8,7 @@ def introspection(url, proxy, headers):
     'result':False,
     'title':'Introspection',
     'description':'Introspection Query Enabled',
-    'impact':'Information Leakage',
+    'impact':'Information Leakage - /' + url.rsplit('/', 1)[-1],
     'severity':'HIGH',
     'curl_verify':''
   }

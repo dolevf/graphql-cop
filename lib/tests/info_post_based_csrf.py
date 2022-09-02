@@ -7,7 +7,7 @@ def post_based_csrf(url, proxies, headers):
     'result':False,
     'title':'POST based url-encoded query (possible CSRF)',
     'description':'GraphQL accepts non-JSON queries over POST',
-    'impact':'Possible Cross Site Request Forgery',
+    'impact':'Possible Cross Site Request Forgery - /' + url.rsplit('/', 1)[-1],
     'severity':'MEDIUM',
     'curl_verify':''
   }
