@@ -1,6 +1,5 @@
 """Collect trace mode details."""
 from lib.utils import graph_query, curlify
-from lib.tests.info_graphiql import detect_graphiql
 
 
 def trace_mode(url, proxy, headers):
@@ -9,7 +8,7 @@ def trace_mode(url, proxy, headers):
     'result':False,
     'title':'Trace Mode',
     'description':'Tracing is Enabled',
-    'impact':'Information Leakage',
+    'impact':'Information Leakage - ' + url,
     'severity':'INFO',
     'curl_verify':''
   }
@@ -25,17 +24,5 @@ def trace_mode(url, proxy, headers):
       res['result'] = True
   except:
     pass
-
-  if hasattr(detect_graphiql, 'GraphQLIDEpath'):
-    url = detect_graphiql.GraphQLIDEpath
-    try:
-      gql_response = graph_query(url, proxies=proxy, headers=headers, payload=q)
-      res['curl_verify'] = curlify(gql_response)
-      if gql_response.json()['errors'][0]['extensions']['tracing']:
-        res['result'] = True
-      elif '\'extensions\': {\'tracing\':' in str(gql_response.json()).lower():
-        res['result'] = True
-    except:
-      pass
 
   return res

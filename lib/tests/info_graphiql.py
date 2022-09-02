@@ -23,7 +23,7 @@ def detect_graphiql(url, proxy, headers):
 
   truepath = ""
   pathlist = parsed.path.split('/')
-  for p in range(0, len(pathlist)):
+  for p in range(len(pathlist)):
     truepath += pathlist[p] + '/'
     url = '{}://{}{}'.format(parsed.scheme, parsed.netloc, truepath)
     for endpoint in endpoints:

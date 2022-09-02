@@ -81,8 +81,14 @@ json_output = []
 for test in tests:
     json_output.append(test(url, proxy, HEADERS))
 
+if hasattr(detect_graphiql, 'GraphQLIDEpath'):
+    url = detect_graphiql.GraphQLIDEpath
+    json_output.append(trace_mode(url, proxy, HEADERS))
+    json_output.append(unhandled_error_detection(url, proxy, HEADERS))
+
 if options.format == 'json':
-    print(json_output)
+    for i in range(len(json_output)):
+        print(json_output[i], end='\n\n')
 else:
     for i in json_output:
         if i['result']:
