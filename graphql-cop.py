@@ -23,8 +23,8 @@ from lib.tests.info_unhandled_error import unhandled_error_detection
 from lib.utils import is_graphql, draw_art
 
 parser = OptionParser(usage='%prog -t http://example.com -o json')
-parser.add_option('-t', '--target', dest='url', help='target url with the path')
-parser.add_option('-H', '--header', dest='header', action='append', help='Append Header(s) to the request \'{"Authorization": "Bearer eyjt"}\' - Use multiple -H for multiple Headers')
+parser.add_option('-t', '--target', dest='url', help='target url with the path - if a GraphQL path is not provided, GraphQL Cop will iterate through a series of common GraphQL paths')
+parser.add_option('-H', '--header', dest='header', action='append', help='Append Header(s) to the request \'{"Authorization": "Bearer eyjt"}\' - Use multiple -H for additional Headers')
 parser.add_option('-o', '--output', dest='format',
                         help='json', default=False)
 parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False,
