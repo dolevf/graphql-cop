@@ -85,22 +85,18 @@ tests = [field_suggestions, introspection, detect_graphiql,
 json_output = []
 
 for path in paths:
+    if not is_graphql(path, proxy, HEADERS):
+        print(path, 'does not seem to be running GraphQL.')
+        continue
     for test in tests:
         json_output.append(test(path, proxy, HEADERS))
 
 json_output = sorted(json_output, key=lambda d: d['title']) 
 
-isgraphql=0
 if options.format == 'json':
     for i in range(len(json_output)):
         print(json_output[i], end='\n\n')
-        if json_output[i]['result']:
-            isgraphql += 1
 else:
     for i in json_output:
         if i['result']:
             print('[{}] {} - {} ({})'.format(i['severity'], i['title'], i['description'], i['impact']))
-            isgraphql += 1
-
-if isgraphql == 0:
-    print(url, 'does not seem to be running GraphQL.')
