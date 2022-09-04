@@ -7,7 +7,7 @@ def get_based_mutation(url, proxies, headers):
     'result':False,
     'title':'Mutation is allowed over GET (possible CSRF)',
     'description':'GraphQL mutations allowed using the GET method',
-    'impact':'Possible Cross Site Request Forgery',
+    'impact':'Possible Cross Site Request Forgery - /' + url.rsplit('/', 1)[-1],
     'severity':'MEDIUM',
     'curl_verify':''
   }

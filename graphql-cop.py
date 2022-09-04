@@ -22,16 +22,16 @@ from lib.tests.info_post_based_csrf import post_based_csrf
 from lib.tests.info_unhandled_error import unhandled_error_detection
 from lib.utils import is_graphql, draw_art
 
-
 parser = OptionParser(usage='%prog -t http://example.com -o json')
-parser.add_option('-t', '--target', dest='url', help='target url with the path')
-parser.add_option('-H', '--header', dest='header', action='append', help='Append Header(s) to the request \'{"Authorization": "Bearer eyjt"}\' - Use multiple -H for multiple Headers')
+parser.add_option('-t', '--target', dest='url', help='target url with the path - if a GraphQL path is not provided, GraphQL Cop will iterate through a series of common GraphQL paths')
+parser.add_option('-H', '--header', dest='header', action='append', help='Append Header(s) to the request \'{"Authorization": "Bearer eyjt"}\' - Use multiple -H for additional Headers')
 parser.add_option('-o', '--output', dest='format',
                         help='json', default=False)
 parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False,
                         help='Sends the request through http://127.0.0.1:8080 proxy')
 parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                         help='Print out the current version and exit.')
+
 
 options, args = parser.parse_args()
 
@@ -61,14 +61,20 @@ if options.header != None:
         print("Cannot cast %s into header dictionary. Ensure the format \'{\"key\": \"value\"}\'."%(options.header))
 
 if not urlparse(options.url).scheme:
-    print("URL missing scheme (http:// or https://). Ensure ULR contains some scheme.")
+    print("URL missing scheme (http:// or https://). Ensure URL contains some scheme.")
     sys.exit(1)
 else:
     url = options.url
 
-if not is_graphql(url, proxy, HEADERS):
-    print(url, 'does not seem to be running GraphQL.')
-    sys.exit(1)
+endpoints = ['/graphiql', '/playground', '/console', '/graphql']
+paths = []
+parsed = urlparse(url)
+
+if parsed.path and parsed.path != '/':
+    paths.append(url)
+else:
+     for endpoint in endpoints:
+        paths.append(parsed.scheme + '://' + parsed.netloc + endpoint)
 
 tests = [field_suggestions, introspection, detect_graphiql,
          get_method_support, alias_overloading, batch_query,
@@ -78,11 +84,18 @@ tests = [field_suggestions, introspection, detect_graphiql,
 
 json_output = []
 
-for test in tests:
-    json_output.append(test(url, proxy, HEADERS))
+for path in paths:
+    if not is_graphql(path, proxy, HEADERS):
+        print(path, 'does not seem to be running GraphQL.')
+        continue
+    for test in tests:
+        json_output.append(test(path, proxy, HEADERS))
+
+json_output = sorted(json_output, key=lambda d: d['title']) 
 
 if options.format == 'json':
-    print(json_output)
+    for i in range(len(json_output)):
+        print(json_output[i], end='\n\n')
 else:
     for i in json_output:
         if i['result']:
