@@ -2,6 +2,7 @@
 import sys
 
 from json import loads
+from json import dumps
 from optparse import OptionParser
 from version import VERSION
 from config import HEADERS
@@ -94,8 +95,7 @@ for path in paths:
 json_output = sorted(json_output, key=lambda d: d['title']) 
 
 if options.format == 'json':
-    for i in range(len(json_output)):
-        print(json_output[i], end='\n\n')
+    print(dumps(json_output))
 else:
     for i in json_output:
         if i['result']:
