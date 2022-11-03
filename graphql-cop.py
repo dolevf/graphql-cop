@@ -28,6 +28,8 @@ parser.add_option('-t', '--target', dest='url', help='target url with the path -
 parser.add_option('-H', '--header', dest='header', action='append', help='Append Header(s) to the request \'{"Authorization": "Bearer eyjt"}\' - Use multiple -H for additional Headers')
 parser.add_option('-o', '--output', dest='format',
                         help='json', default=False)
+parser.add_option('-f', '--force', dest='forced_scan', action='store_true',
+                        help='Forces a scan when GraphQL cannot be detected', default=False)                        
 parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False,
                         help='Sends the request through http://127.0.0.1:8080 proxy')
 parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
@@ -87,8 +89,11 @@ json_output = []
 
 for path in paths:
     if not is_graphql(path, proxy, HEADERS):
-        print(path, 'does not seem to be running GraphQL.')
-        continue
+        if not options.forced_scan:
+            print(path, 'does not seem to be running GraphQL. (Consider using -f to force the scan if GraphQL does exist on the endpoint)')
+            continue
+        else:
+            print('Running a forced scan against the endpoint')
     for test in tests:
         json_output.append(test(path, proxy, HEADERS))
 

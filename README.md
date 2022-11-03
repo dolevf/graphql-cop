@@ -37,12 +37,16 @@ Usage: graphql-cop.py -t http://example.com -o json
 
 Options:
   -h, --help            show this help message and exit
-  -t URL, --target=URL  target url with the path
+  -t URL, --target=URL  target url with the path - if a GraphQL path is not
+                        provided, GraphQL Cop will iterate through a series of
+                        common GraphQL paths
   -H HEADER, --header=HEADER
-                        Append Header to the request '{"Authorization":
-                        "Bearer eyjt"}'
-  -o OUTPUT_JSON, --output=OUTPUT_JSON
-                        Output results to stdout (JSON)
+                        Append Header(s) to the request '{"Authorization":
+                        "Bearer eyjt"}' - Use multiple -H for additional
+                        Headers
+  -o FORMAT, --output=FORMAT
+                        json
+  -f, --force           Forces a scan when GraphQL cannot be detected
   -x, --proxy           Sends the request through http://127.0.0.1:8080 proxy
   -v, --version         Print out the current version and exit
 ```
