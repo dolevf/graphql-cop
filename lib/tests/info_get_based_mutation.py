@@ -14,7 +14,7 @@ def get_based_mutation(url, proxies, headers):
   }
 
   q = 'mutation cop {__typename}'
-
+  headers['X-GraphQL-Cop-Test'] = res['title']
   response = request(url, proxies=proxies, headers=headers, params={'query':q})
   res['curl_verify'] = curlify(response)
   try:

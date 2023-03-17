@@ -18,6 +18,7 @@ def alias_overloading(url, proxy, headers):
   for i in range(0, 101):
      aliases += 'alias{}:__typename \n'.format(i)
 
+  headers['X-GraphQL-Cop-Test'] = res['title']
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload='query cop { ' + aliases + ' }')
 
   res['curl_verify'] = curlify(gql_response)

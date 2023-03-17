@@ -18,7 +18,7 @@ def detect_graphiql(url, proxy, headers):
   if "Accept" in headers.keys():
     backup_accept_header=headers["Accept"]
   headers["Accept"]= "text/html"
-
+  headers['X-GraphQL-Cop-Test'] = res['title']
   response = request(url, proxies=proxy, headers=headers)
   res['curl_verify'] = curlify(response)
   try:
