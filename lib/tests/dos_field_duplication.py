@@ -10,6 +10,7 @@ def field_duplication(url, proxy, headers):
     'description':'Queries are allowed with 500 of the same repeated field',
     'impact':'Denial of Service - /' + url.rsplit('/', 1)[-1],
     'severity':'HIGH',
+    'color': 'red',
     'curl_verify':''
   }
 

@@ -10,6 +10,7 @@ def introspection(url, proxy, headers):
     'description':'Introspection Query Enabled',
     'impact':'Information Leakage - /' + url.rsplit('/', 1)[-1],
     'severity':'HIGH',
+    'color': 'red',
     'curl_verify':''
   }
 

@@ -10,6 +10,7 @@ def field_suggestions(url, proxy, headers):
     'description':'Field Suggestions are Enabled',
     'impact':'Information Leakage - /' + url.rsplit('/', 1)[-1],
     'severity':'LOW',
+    'color': 'blue',
     'curl_verify':''
   }
 

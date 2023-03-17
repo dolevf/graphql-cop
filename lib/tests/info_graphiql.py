@@ -9,6 +9,7 @@ def detect_graphiql(url, proxy, headers):
     'description':'GraphiQL Explorer/Playground Enabled',
     'impact':'Information Leakage - /' + url.rsplit('/', 1)[-1],
     'severity':'LOW',
+    'color': 'blue',
     'curl_verify':''
   }
 

@@ -80,6 +80,7 @@ python3 graphql-cop.py -t https://mywebsite.com/graphql -o json
   'impact': 'Information Leakage',
   'result': False,
   'severity': 'INFO',
+  'color': 'green',
   'title': 'Trace Mode'},
  {'curl_verify': 'curl -X POST -H "User-Agent: graphql-cop/1.2" -H '
                  '"Accept-Encoding: gzip, deflate" -H "Accept: */*" -H '
@@ -91,6 +92,7 @@ python3 graphql-cop.py -t https://mywebsite.com/graphql -o json
   'impact': 'Denial of Service',
   'result': True,
   'severity': 'HIGH',
+  'color': 'red',
   'title': 'Directive Overloading'}]
 ```
 

@@ -10,6 +10,7 @@ def batch_query(url, proxy, headers):
     'description':'Batch queries allowed with 10+ simultaneous queries',
     'impact':'Denial of Service - /' + url.rsplit('/', 1)[-1],
     'severity':'HIGH',
+    'color': 'red',
     'curl_verify':''
   }
 

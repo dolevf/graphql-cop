@@ -10,6 +10,7 @@ def directive_overloading(url, proxy, headers):
     'description':'Multiple duplicated directives allowed in a query',
     'impact':'Denial of Service - /' + url.rsplit('/', 1)[-1],
     'severity':'HIGH',
+    'color': 'red',
     'curl_verify':''
   }
 

@@ -10,6 +10,7 @@ def unhandled_error_detection(url, proxy, headers):
     'description':'Exception errors are not handled',
     'impact':'Information Leakage - /' + url.rsplit('/', 1)[-1],
     'severity':'INFO',
+    'color': 'green',
     'curl_verify':''
   }
 

@@ -10,6 +10,7 @@ def alias_overloading(url, proxy, headers):
     'description':'Alias Overloading with 100+ aliases is allowed',
     'impact':'Denial of Service - /' + url.rsplit('/', 1)[-1],
     'severity':'HIGH',
+    'color': 'red',
     'curl_verify':''
   }
   aliases = ''
