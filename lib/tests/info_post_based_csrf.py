@@ -2,7 +2,7 @@
 from lib.utils import request, curlify
 
 
-def post_based_csrf(url, proxies, headers):
+def post_based_csrf(url, proxies, headers, debug_mode):
   res = {
     'result':False,
     'title':'POST based url-encoded query (possible CSRF)',
@@ -13,8 +13,9 @@ def post_based_csrf(url, proxies, headers):
     'curl_verify':''
   }
 
-  q = 'query cop {__typename}'
-  headers['X-GraphQL-Cop-Test'] = res['title']
+  q = 'query cop { __typename }'
+  if debug_mode:
+    headers['X-GraphQL-Cop-Test'] = res['title']
   response = request(url, proxies=proxies, headers=headers, data={'query': q}, verb='POST')
   res['curl_verify'] = curlify(response)
 

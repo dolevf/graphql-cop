@@ -1,8 +1,7 @@
 #!/usr/env/python3
 import sys
 
-from json import loads
-from json import dumps
+from json import loads, dumps
 from optparse import OptionParser
 from version import VERSION
 from config import HEADERS
@@ -31,8 +30,10 @@ parser.add_option('-H', '--header', dest='header', action='append', help='Append
 parser.add_option('-o', '--output', dest='format',
                         help='json', default=False)
 parser.add_option('-f', '--force', dest='forced_scan', action='store_true',
-                        help='Forces a scan when GraphQL cannot be detected', default=False)                        
-parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False,
+                        help='Forces a scan when GraphQL cannot be detected', default=False)
+parser.add_option('-d', '--debug', dest='debug_mode', action='store_true',
+                        help='Append a header with the test name for debugging', default=False)                        
+parser.add_option('-x', '--proxy', dest='proxy', action='store_true', default=False,
                         help='Sends the request through http://127.0.0.1:8080 proxy')
 parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                         help='Print out the current version and exit.')
@@ -90,14 +91,14 @@ tests = [field_suggestions, introspection, detect_graphiql,
 json_output = []
 
 for path in paths:
-    if not is_graphql(path, proxy, HEADERS):
+    if not is_graphql(path, proxy, HEADERS, options.debug_mode):
         if not options.forced_scan:
             print(path, 'does not seem to be running GraphQL. (Consider using -f to force the scan if GraphQL does exist on the endpoint)')
             continue
         else:
             print('Running a forced scan against the endpoint')
     for test in tests:
-        json_output.append(test(path, proxy, HEADERS))
+        json_output.append(test(path, proxy, HEADERS, options.debug_mode))
 
 json_output = sorted(json_output, key=lambda d: d['title']) 
 

@@ -1,7 +1,7 @@
 """Perform Circular Query based on Introspection."""
 from lib.utils import graph_query, curlify
 
-def circular_query_introspection(url, proxy, headers):
+def circular_query_introspection(url, proxy, headers, debug_mode):
   """Run a Circular Query using introspection."""
   res = {
     'result':False,
@@ -14,7 +14,8 @@ def circular_query_introspection(url, proxy, headers):
   }
 
   q = 'query cop { __schema { types { fields { type { fields { type { fields { type { fields { type { name } } } } } } } } } } }'
-  headers['X-GraphQL-Cop-Test'] = res['title']
+  if debug_mode:
+    headers['X-GraphQL-Cop-Test'] = res['title']
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload=q)
   res['curl_verify'] = curlify(gql_response)
   try:

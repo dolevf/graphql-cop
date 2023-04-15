@@ -2,7 +2,7 @@
 from lib.utils import graph_query, get_error, curlify
 
 
-def field_suggestions(url, proxy, headers):
+def field_suggestions(url, proxy, headers, debug_mode):
   """Retrieve field suggestions."""
   res = {
     'result':False,
@@ -15,7 +15,8 @@ def field_suggestions(url, proxy, headers):
   }
 
   q = 'query cop { __schema { directive } }'
-  headers['X-GraphQL-Cop-Test'] = res['title']
+  if debug_mode:
+    headers['X-GraphQL-Cop-Test'] = res['title']
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload=q)
   res['curl_verify'] = curlify(gql_response)
 

@@ -2,7 +2,7 @@
 from lib.utils import request, curlify
 
 
-def get_based_mutation(url, proxies, headers):
+def get_based_mutation(url, proxies, headers, debug_mode):
   res = {
     'result':False,
     'title':'Mutation is allowed over GET (possible CSRF)',
@@ -14,7 +14,8 @@ def get_based_mutation(url, proxies, headers):
   }
 
   q = 'mutation cop {__typename}'
-  headers['X-GraphQL-Cop-Test'] = res['title']
+  if debug_mode:
+    headers['X-GraphQL-Cop-Test'] = res['title']
   response = request(url, proxies=proxies, headers=headers, params={'query':q})
   res['curl_verify'] = curlify(response)
   try:

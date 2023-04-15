@@ -2,7 +2,7 @@
 from lib.utils import request, curlify
 
 
-def get_method_support(url, proxies, headers):
+def get_method_support(url, proxies, headers, debug_mode):
   """Get the supported methods."""
   res = {
     'result':False,
@@ -15,7 +15,8 @@ def get_method_support(url, proxies, headers):
   }
 
   q = 'query cop {__typename}'
-  headers['X-GraphQL-Cop-Test'] = res['title']
+  if debug_mode:
+    headers['X-GraphQL-Cop-Test'] = res['title']
   response = request(url, proxies=proxies, headers=headers, params={'query':q})
   res['curl_verify'] = curlify(response)
 

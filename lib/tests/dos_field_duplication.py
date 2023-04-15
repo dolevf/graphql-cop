@@ -2,7 +2,7 @@
 from lib.utils import graph_query, curlify
 
 
-def field_duplication(url, proxy, headers):
+def field_duplication(url, proxy, headers, debug_mode):
   """Check for field duplication."""
   res = {
     'result':False,
@@ -16,7 +16,8 @@ def field_duplication(url, proxy, headers):
 
   duplicated_string = '__typename \n' * 500
   q = 'query cop { ' + duplicated_string + '} '
-  headers['X-GraphQL-Cop-Test'] = res['title']
+  if debug_mode:
+    headers['X-GraphQL-Cop-Test'] = res['title']
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload=q)
   res['curl_verify'] = curlify(gql_response)
 
