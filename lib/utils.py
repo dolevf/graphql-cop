@@ -72,8 +72,10 @@ def request(url, proxies, headers, params=None, data=None, verb='GET'):
 
 
 
-def is_graphql(url, proxies, headers):
+def is_graphql(url, proxies, headers, debug_mode):
   """Check if the URL provides a GraphQL interface."""
+  if debug_mode:
+    headers['X-GraphQL-Cop-Test'] = 'Looking for GraphQL Interface'
   query = '''
     query cop {
       __typename

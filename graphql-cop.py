@@ -1,8 +1,7 @@
 #!/usr/env/python3
 import sys
 
-from json import loads
-from json import dumps
+from json import loads, dumps
 from optparse import OptionParser
 from version import VERSION
 from config import HEADERS
@@ -23,14 +22,18 @@ from lib.tests.info_post_based_csrf import post_based_csrf
 from lib.tests.info_unhandled_error import unhandled_error_detection
 from lib.utils import is_graphql, draw_art
 
+from termcolor import colored
+
 parser = OptionParser(usage='%prog -t http://example.com -o json')
 parser.add_option('-t', '--target', dest='url', help='target url with the path - if a GraphQL path is not provided, GraphQL Cop will iterate through a series of common GraphQL paths')
 parser.add_option('-H', '--header', dest='header', action='append', help='Append Header(s) to the request \'{"Authorization": "Bearer eyjt"}\' - Use multiple -H for additional Headers')
 parser.add_option('-o', '--output', dest='format',
                         help='json', default=False)
 parser.add_option('-f', '--force', dest='forced_scan', action='store_true',
-                        help='Forces a scan when GraphQL cannot be detected', default=False)                        
-parser.add_option('--proxy', '-x', dest='proxy', action='store_true', default=False,
+                        help='Forces a scan when GraphQL cannot be detected', default=False)
+parser.add_option('-d', '--debug', dest='debug_mode', action='store_true',
+                        help='Append a header with the test name for debugging', default=False)                        
+parser.add_option('-x', '--proxy', dest='proxy', action='store_true', default=False,
                         help='Sends the request through http://127.0.0.1:8080 proxy')
 parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                         help='Print out the current version and exit.')
@@ -88,14 +91,14 @@ tests = [field_suggestions, introspection, detect_graphiql,
 json_output = []
 
 for path in paths:
-    if not is_graphql(path, proxy, HEADERS):
+    if not is_graphql(path, proxy, HEADERS, options.debug_mode):
         if not options.forced_scan:
             print(path, 'does not seem to be running GraphQL. (Consider using -f to force the scan if GraphQL does exist on the endpoint)')
             continue
         else:
             print('Running a forced scan against the endpoint')
     for test in tests:
-        json_output.append(test(path, proxy, HEADERS))
+        json_output.append(test(path, proxy, HEADERS, options.debug_mode))
 
 json_output = sorted(json_output, key=lambda d: d['title']) 
 
@@ -104,4 +107,4 @@ if options.format == 'json':
 else:
     for i in json_output:
         if i['result']:
-            print('[{}] {} - {} ({})'.format(i['severity'], i['title'], i['description'], i['impact']))
+            print('[{}] {} - {} ({})'.format(colored(i['severity'], i['color'], attrs=['bold']), colored(i['title'], 'white', attrs=['bold']), i['description'], i['impact']))

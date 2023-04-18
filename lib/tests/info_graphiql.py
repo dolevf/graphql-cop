@@ -1,7 +1,7 @@
 """Collect GraphiQL details."""
 from lib.utils import request, curlify
 
-def detect_graphiql(url, proxy, headers):
+def detect_graphiql(url, proxy, headers, debug_mode):
   """Get GraphiQL."""
   res = {
     'result':False,
@@ -9,6 +9,7 @@ def detect_graphiql(url, proxy, headers):
     'description':'GraphiQL Explorer/Playground Enabled',
     'impact':'Information Leakage - /' + url.rsplit('/', 1)[-1],
     'severity':'LOW',
+    'color': 'blue',
     'curl_verify':''
   }
 
@@ -17,7 +18,8 @@ def detect_graphiql(url, proxy, headers):
   if "Accept" in headers.keys():
     backup_accept_header=headers["Accept"]
   headers["Accept"]= "text/html"
-
+  if debug_mode:
+      headers['X-GraphQL-Cop-Test'] = res['title']
   response = request(url, proxies=proxy, headers=headers)
   res['curl_verify'] = curlify(response)
   try:

@@ -2,7 +2,7 @@
 from lib.utils import graph_query, curlify
 
 
-def directive_overloading(url, proxy, headers):
+def directive_overloading(url, proxy, headers, debug_mode):
   """Check for directive overloading."""
   res = {
     'result':False,
@@ -10,10 +10,13 @@ def directive_overloading(url, proxy, headers):
     'description':'Multiple duplicated directives allowed in a query',
     'impact':'Denial of Service - /' + url.rsplit('/', 1)[-1],
     'severity':'HIGH',
+    'color': 'red',
     'curl_verify':''
   }
 
   q = 'query cop { __typename @aa@aa@aa@aa@aa@aa@aa@aa@aa@aa }'
+  if debug_mode:
+    headers['X-GraphQL-Cop-Test'] = res['title']
   gql_response = graph_query(url, proxies=proxy, headers=headers, payload=q)
   res['curl_verify'] = curlify(gql_response)
 
