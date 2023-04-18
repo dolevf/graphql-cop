@@ -47,8 +47,9 @@ Options:
   -o FORMAT, --output=FORMAT
                         json
   -f, --force           Forces a scan when GraphQL cannot be detected
+  -d, --debug           Append a header with the test name for debugging
   -x, --proxy           Sends the request through http://127.0.0.1:8080 proxy
-  -v, --version         Print out the current version and exit
+  -v, --version         Print out the current version and exit.
 ```
 
 Test a website
