@@ -37,6 +37,8 @@ parser.add_option('-x', '--proxy', dest='proxy', action='store_true', default=Fa
                         help='Sends the request through http://127.0.0.1:8080 proxy')
 parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                         help='Print out the current version and exit.')
+parser.add_option('--tor','-t', dest='tor', action='store_true', default=False,
+                  help='Sends the request through the Tor network (ensure Tor is running and properly configured)')
 
 
 options, args = parser.parse_args()
@@ -55,6 +57,14 @@ if options.proxy == True:
         'http':  'http://127.0.0.1:8080',
         'https': 'http://127.0.0.1:8080',
     }
+elif options.tor:
+    import socks
+    import socket
+
+    socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, '127.0.0.1', 9050)
+    socket.socket = socks.socksocket
+
+    proxy = {}
 else:
     proxy = {}
 

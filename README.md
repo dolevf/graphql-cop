@@ -4,17 +4,19 @@
   <img src="https://github.com/dolevf/graphql-cop/blob/main/static/images/logo.png?raw=true" width="500px" alt="GraphQL Cop"/>
 </p>
 
-
 ## About
+
 GraphQL Cop is a small Python utility to run common security tests against GraphQL APIs. GraphQL Cop is perfect for running CI/CD checks in GraphQL. It is lightweight, and covers interesting security issues in GraphQL.
 
-GraphQL Cop allows you to reproduce the findings by providing cURL commands upon any identified vulnerabilities. 
+GraphQL Cop allows you to reproduce the findings by providing cURL commands upon any identified vulnerabilities.
 
 ## Requirements
+
 - Python3
 - Requests Library
 
 ## Detections
+
 - Alias Overloading (DoS)
 - Batch Queries (DoS)
 - GET based Queries (CSRF)
@@ -50,6 +52,7 @@ Options:
   -d, --debug           Append a header with the test name for debugging
   -x, --proxy           Sends the request through http://127.0.0.1:8080 proxy
   -v, --version         Print out the current version and exit.
+  -tor, --tor           Enable Tor proxy
 ```
 
 Test a website
@@ -69,6 +72,7 @@ Starting...
 ```
 
 Test a website, dump to a parse-able JSON output, cURL reproduction command
+
 ```
 python3 graphql-cop.py -t https://mywebsite.com/graphql -o json
 
