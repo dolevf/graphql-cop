@@ -48,7 +48,9 @@ Options:
                         json
   -f, --force           Forces a scan when GraphQL cannot be detected
   -d, --debug           Append a header with the test name for debugging
-  -x, --proxy           Sends the request through http://127.0.0.1:8080 proxy
+  -x PROXY, --proxy=PROXY
+                        HTTP(S) proxy URL in the form
+                        http://user:pass@host:port
   -v, --version         Print out the current version and exit.
 ```
 
@@ -97,10 +99,10 @@ python3 graphql-cop.py -t https://mywebsite.com/graphql -o json
   'title': 'Directive Overloading'}]
 ```
 
-Test a website using `graphql-cop` through a proxy (e.g. Burp Suite) with custom headers (e.g. Authorization):
+Test a website using `graphql-cop` through a proxy (e.g. Burp Suite listening on 127.0.0.1:8080) with custom headers (e.g. Authorization):
 
 ```
-$ python3 graphql-cop.py -t https://mywebsite.com/graphql --proxy --header '{"Authorization": "Bearer token_here"}'
+$ python3 graphql-cop.py -t https://mywebsite.com/graphql --proxy=http://127.0.0.1:8080 --header '{"Authorization": "Bearer token_here"}'
 
                 GraphQL Cop 1.2
            Security Auditor for GraphQL
