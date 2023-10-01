@@ -32,9 +32,9 @@ parser.add_option('-o', '--output', dest='format',
 parser.add_option('-f', '--force', dest='forced_scan', action='store_true',
                         help='Forces a scan when GraphQL cannot be detected', default=False)
 parser.add_option('-d', '--debug', dest='debug_mode', action='store_true',
-                        help='Append a header with the test name for debugging', default=False)                        
-parser.add_option('-x', '--proxy', dest='proxy', action='store_true', default=False,
-                        help='Sends the request through http://127.0.0.1:8080 proxy')
+                        help='Append a header with the test name for debugging', default=False)
+parser.add_option('-x', '--proxy', dest='proxy', default=None,
+                  help='HTTP(S) proxy URL in the form http://user:pass@host:port')
 parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                         help='Print out the current version and exit.')
 
@@ -50,10 +50,10 @@ if not options.url:
     parser.print_help()
     sys.exit(1)
 
-if options.proxy == True:
+if options.proxy:
     proxy = {
-        'http':  'http://127.0.0.1:8080',
-        'https': 'http://127.0.0.1:8080',
+        'http': options.proxy,
+        'https': options.proxy
     }
 else:
     proxy = {}
