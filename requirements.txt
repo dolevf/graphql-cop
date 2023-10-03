@@ -1,3 +1,4 @@
 requests==2.25.1
 simplejson==3.17.6
 termcolor==2.2.0
+PySocks==1.7.1
