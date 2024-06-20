@@ -54,7 +54,7 @@ Options:
                         HTTP(S) proxy URL in the form
                         http://user:pass@host:port
   -v, --version         Print out the current version and exit.
-  -tor, --tor           Enable Tor proxy
+  -T, --tor           Enable Tor proxy
 ```
 
 Test a website

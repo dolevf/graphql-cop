@@ -37,7 +37,7 @@ parser.add_option('-x', '--proxy', dest='proxy', default=None,
                   help='HTTP(S) proxy URL in the form http://user:pass@host:port')
 parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                         help='Print out the current version and exit.')
-parser.add_option('--tor','-t', dest='tor', action='store_true', default=False,
+parser.add_option('--tor','-T', dest='tor', action='store_true', default=False,
                   help='Sends the request through the Tor network (ensure Tor is running and properly configured)')
 
 
