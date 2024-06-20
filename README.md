@@ -30,6 +30,17 @@ GraphQL Cop allows you to reproduce the findings by providing cURL commands upon
 - Circular Query using Introspection (DoS)
 - Mutation support over GET methods (CSRF)
 
+## Installation
+Below commands should be executed to install dependencies.
+```
+python3 -m venv path/to/venv
+source path/to/venv/bin/activate
+python3 -m pip install -r requirements.txt
+```
+First command creates a virtual environment in the directory specified by `**path/to/venv**`.
+Second command activates the virtual environment. 
+Final command installs all the Python packages listed in the requirements.txt.
+
 ## Usage
 
 ```
