@@ -58,7 +58,7 @@ Options:
                         "Bearer eyjt"}' - Use multiple -H for additional
                         Headers
   -o FORMAT, --output=FORMAT
-                        json
+                        json, html
   -E ENDPOINT, --endpoint=ENDPOINT
                         Append custom endpoints to the search list  - Use
                         multiple -E for additional Endpoints to check.
