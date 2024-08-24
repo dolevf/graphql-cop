@@ -29,6 +29,7 @@ parser.add_option('-t', '--target', dest='url', help='target url with the path -
 parser.add_option('-H', '--header', dest='header', action='append', help='Append Header(s) to the request \'{"Authorization": "Bearer eyjt"}\' - Use multiple -H for additional Headers')
 parser.add_option('-o', '--output', dest='format',
                         help='json', default=False)
+parser.add_option('-E', '--endpoint', dest='endpoint', action='append', help='Append custom endpoints to the search list  - Use multiple -E for additional Endpoints to check.')
 parser.add_option('-f', '--force', dest='forced_scan', action='store_true',
                         help='Forces a scan when GraphQL cannot be detected', default=False)
 parser.add_option('-d', '--debug', dest='debug_mode', action='store_true',
@@ -71,6 +72,10 @@ else:
 if options.header != None:
     try:
         for l in options.header:
+            #parser deleted " sign
+            if ":" in l:
+                key, value = l.split(":", 1)
+                l = dumps({key.strip(): value.strip()})
             extra_headers = loads(l)
             HEADERS.update(extra_headers)
     except:
@@ -83,6 +88,17 @@ else:
     url = options.url
 
 endpoints = ['/graphiql', '/playground', '/console', '/graphql']
+
+if options.endpoint != None:
+    try:
+        for e in options.endpoint:
+            #check if format /endpoint is ensured, if not ensure it yourself
+            if not e.startswith("/"):
+                e = "/"+e
+            endpoints.append(e)
+    except:
+         print("Cannot cast %s into endpoint dictionary."%(options.header))
+
 paths = []
 parsed = urlparse(url)
 
