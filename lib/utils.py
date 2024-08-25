@@ -164,10 +164,17 @@ def generate_html_output(logo_url: str, path:str, json_output:list, urls:list):
       <h4> Description  </h4>
       <p> {vuln["description"]}  </p>
       
-      <h4> Proof in curl  </h4>
-      <code>
-        {vuln["curl_verify"]}
-      </code>
+      <h4> Proof in curl </h4>
+      <div class="code-container">
+        <button class="copy-button">
+          <span class="clipboard-icon">&#128203;</span>
+          <span class="checkmark-icon">&#9989;</span>
+        </button>
+        <pre><code>
+          {vuln["curl_verify"]}
+        </code></pre>
+      </div>
+
       <br>
       <br>
       '''
@@ -191,6 +198,7 @@ def generate_html_output(logo_url: str, path:str, json_output:list, urls:list):
   basic_html = f'''
   <html>
     <head>
+        <!DOCTYPE html>
         <meta charset="UTF-8"> 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
@@ -203,18 +211,18 @@ def generate_html_output(logo_url: str, path:str, json_output:list, urls:list):
       <br><hr>
 
       <div style="display:flex">
-        <div style="flex: 0 0 45%;">
+        <div style="flex: 0 0 55%;">
           <h2 style="position: absolute;left: 17%;transform: translate(0, -50%);"> Scope of the test </h2>
           <br><br>
           {ScopeHtml}
         </div>
-        <div style="flex: 0 0 55%;display: flex;position: relative;">
-          <h2 style="position: absolute;left: 50%;transform: translate(-50%, -50%);"> Identified vulnerabilities </h2>
-          <div style="flex: 1;padding:40px; margin-top:30px">
-            <div style="float: left; width: 45%"> <div class="pie"></div></div>
+        <div style="flex: 0 0 60%;display: flex;position: relative;margin-left:100px">
+          <h2 style="position: absolute;left: 30%;transform: translate(-50%, -50%);"> Identified vulnerabilities </h2>
+          <div style="flex: 1; margin-top:50px; margin-left:30px; margin-bottom:30px">
+            <div class="pie"></div>
           </div>
-          <div style="flex: 1;padding:40px; margin-top:30px">
-            <div class='row' style="margin-top:50px"><div class='box Critical'></div> <div style="white-space: pre;"> Critical   {severity_dict["CRITICAL"]}</div> </div>
+          <div style="flex: 0 0 80%;padding:40px; margin-top:30px">
+            <div class='row' style="margin-top:5px"><div class='box Critical'></div> <div style="white-space: pre;"> Critical   {severity_dict["CRITICAL"]}</div> </div>
             <div class='row' style="margin-top:5px" ><div class='box High'></div>     <div style="white-space: pre;"> High       {severity_dict["HIGH"]}</div></div>
             <div class='row' style="margin-top:5px" ><div class='box Medium'></div>   <div style="white-space: pre;"> Medium  {severity_dict["MEDIUM"]}</div></div>
             <div class='row' style="margin-top:5px" ><div class='box Low'></div>      <div style="white-space: pre;"> Low        {severity_dict["LOW"]}</div></div>
@@ -236,8 +244,9 @@ def generate_html_output(logo_url: str, path:str, json_output:list, urls:list):
       --slice4:  {temp_severity_list[3]};  /* Percentage of the fourth slice */
       --slice5:  {temp_severity_list[4]};  /* Percentage of the fifth slice */
 
-      width: 200px;
+      
       height: 200px;
+      width: 200px;
       border-radius: 50%;
       background: conic-gradient(
         var(--color1) 0 calc(var(--slice1) * 1%),
@@ -253,19 +262,84 @@ def generate_html_output(logo_url: str, path:str, json_output:list, urls:list):
       --color3: orange;
       --color4: yellow;
       --color5: lightgray;
+      
+      position: relative; /* Necessary for absolute positioning */
+      &::after {{
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%; /* Adjust the size as needed */
+        height: 50%;
+        background-color: white;
+        border-radius: 50%;
       }}
-      code {{
+
+    }}
+
+      pre {{
         font-family: 'Courier New', Courier, monospace;
         background-color: #f5f5f5; 
         padding: 10px; 
         border-radius: 5px; 
         color: #333; 
         display: block; 
-        white-space: pre-wrap; 
+        white-space: normal;
         line-height: 1.5; 
         margin: 0 20px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+        padding-right: 40px;
       }}
+      
+      .code-container {{
+            position: relative;
+        }}
+
+        .copy-button {{
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 5px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }}
+
+        .clipboard-icon {{
+            position: absolute;
+            right: 25px;
+            font-size: 28px;
+        }}
+
+        
+        .checkmark-icon {{
+            position: absolute;
+            right: 25px;
+            font-size: 28px; 
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }}
+ 
+        .copy-button.copied .checkmark-icon {{
+            animation: showCheckmark 2s ease-in-out;
+        }}
+
+        @keyframes showCheckmark {{
+            0% {{
+                opacity: 0;
+            }}
+            30% {{
+                opacity: 0.7;
+            }}
+            70% {{
+                opacity: 0.7;
+            }}
+            100% {{
+                opacity: 0;
+            }}
+        }}
 
       .box {{
         float: left;
@@ -296,7 +370,76 @@ def generate_html_output(logo_url: str, path:str, json_output:list, urls:list):
       .Info{{
         background-color: LightGray;
       }}
+      @media print {{
+        * {{
+          -webkit-print-color-adjust: exact !important;   /* Chrome, Safari 6 – 15.3, Edge */
+          color-adjust: exact !important;                 /* Firefox 48 – 96 */
+          print-color-adjust: exact !important;           /* Firefox 97+, Safari 15.4+ */
+        }}
+        body {{
+          overflow-x: hidden; 
+          overflow-y: hidden; 
+        }}
+        @page {{
+          header: none;
+        }}
+        
+        .pie, span {{
+          color: inherit; /* Inherit color from parent or default */
+          background-color: inherit; /* Inherit background color */
+        }}
+        
+        .Critical, .High, .Medium, .Low, .Info {{
+          color: inherit; /* Inherit color from parent or default */
+        }}
+        .box{{
+          border: 2px solid black !important;
+          float: left;
+          height: 20px;
+          width: 20px;
+        }}
+        
+        .clipboard-icon{{
+          visibility: hidden;
+        }}
+        
+        hr {{
+          display: block;
+          height: 1px;
+          background: transparent;
+          width: 100%;
+          border: none;
+          border-top: solid 3px #aaa;
+        }}
+        
+        
+      }}
     </style>
+    
+    <script>
+      document.querySelectorAll('.copy-button').forEach(button => {{
+        button.addEventListener('click', () => {{
+            const codeBlock = button.nextElementSibling.querySelector('code');
+            const range = document.createRange();
+            range.selectNodeContents(codeBlock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            try {{
+                document.execCommand('copy');
+                selection.removeAllRanges();
+                button.classList.add('copied');
+                setTimeout(() => {{
+                  button.classList.remove('copied');
+                }}, 2000);
+            }} catch (err) {{
+                console.error('Failed to copy text: ', err);
+            }}
+        }});
+      }});
+    </script>
+    
   </body>
 </html>
   '''
