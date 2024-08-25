@@ -330,7 +330,7 @@ def generate_html_output(logo_url: str, path:str, json_output:list, urls:list):
             0% {{
                 opacity: 0;
             }}
-            30% {{
+            10% {{
                 opacity: 0.7;
             }}
             70% {{
