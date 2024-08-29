@@ -58,14 +58,18 @@ Options:
                         "Bearer eyjt"}' - Use multiple -H for additional
                         Headers
   -o FORMAT, --output=FORMAT
-                        json
+                        json, html
+  -E ENDPOINT, --endpoint=ENDPOINT
+                        Append custom endpoints to the search list  - Use
+                        multiple -E for additional Endpoints to check.
   -f, --force           Forces a scan when GraphQL cannot be detected
   -d, --debug           Append a header with the test name for debugging
   -x PROXY, --proxy=PROXY
                         HTTP(S) proxy URL in the form
                         http://user:pass@host:port
   -v, --version         Print out the current version and exit.
-  -T, --tor           Enable Tor proxy
+  -T, --tor             Sends the request through the Tor network (ensure Tor
+                        is running and properly configured)
 ```
 
 Test a website

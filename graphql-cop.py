@@ -20,7 +20,7 @@ from lib.tests.dos_circular_introspection import circular_query_introspection
 from lib.tests.info_get_based_mutation import get_based_mutation
 from lib.tests.info_post_based_csrf import post_based_csrf
 from lib.tests.info_unhandled_error import unhandled_error_detection
-from lib.utils import is_graphql, draw_art
+from lib.utils import is_graphql, draw_art, generate_html_output
 
 from termcolor import colored
 
@@ -28,7 +28,8 @@ parser = OptionParser(usage='%prog -t http://example.com -o json')
 parser.add_option('-t', '--target', dest='url', help='target url with the path - if a GraphQL path is not provided, GraphQL Cop will iterate through a series of common GraphQL paths')
 parser.add_option('-H', '--header', dest='header', action='append', help='Append Header(s) to the request \'{"Authorization": "Bearer eyjt"}\' - Use multiple -H for additional Headers')
 parser.add_option('-o', '--output', dest='format',
-                        help='json', default=False)
+                        help='json, html', default=False)
+parser.add_option('-E', '--endpoint', dest='endpoint', action='append', help='Append custom endpoints to the search list  - Use multiple -E for additional Endpoints to check.')
 parser.add_option('-f', '--force', dest='forced_scan', action='store_true',
                         help='Forces a scan when GraphQL cannot be detected', default=False)
 parser.add_option('-d', '--debug', dest='debug_mode', action='store_true',
@@ -71,6 +72,10 @@ else:
 if options.header != None:
     try:
         for l in options.header:
+            #parser deleted " sign
+            if ":" in l:
+                key, value = l.split(":", 1)
+                l = dumps({key.strip(): value.strip()})
             extra_headers = loads(l)
             HEADERS.update(extra_headers)
     except:
@@ -83,6 +88,17 @@ else:
     url = options.url
 
 endpoints = ['/graphiql', '/playground', '/console', '/graphql']
+
+if options.endpoint != None:
+    try:
+        for e in options.endpoint:
+            #check if format /endpoint is ensured, if not ensure it yourself
+            if not e.startswith("/"):
+                e = "/"+e
+            endpoints.append(e)
+    except:
+         print("Cannot cast %s into endpoints list."%(options.header))
+
 paths = []
 parsed = urlparse(url)
 
@@ -106,14 +122,20 @@ for path in paths:
             print(path, 'does not seem to be running GraphQL. (Consider using -f to force the scan if GraphQL does exist on the endpoint)')
             continue
         else:
-            print('Running a forced scan against the endpoint')
+            print(f'Running a forced scan against the endpoint /{path.split("/")[-1]}')
     for test in tests:
-        json_output.append(test(path, proxy, HEADERS, options.debug_mode))
+        try: #force param is cousing output to crash if no graphql detected
+            json_output.append(test(path, proxy, HEADERS, options.debug_mode))
+        except:
+            pass
+            
 
 json_output = sorted(json_output, key=lambda d: d['title']) 
 
 if options.format == 'json':
     print(dumps(json_output))
+elif options.format == "html":
+    generate_html_output("https://github.com/dolevf/graphql-cop/blob/main/static/images/logo.png?raw=true", "./", json_output, paths)
 else:
     for i in json_output:
         if i['result']:
