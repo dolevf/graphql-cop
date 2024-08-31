@@ -3,6 +3,7 @@ import requests
 from simplejson import JSONDecodeError
 from version import VERSION
 from datetime import datetime
+import base64
 
 requests.packages.urllib3.disable_warnings()
 
@@ -109,7 +110,8 @@ def draw_art():
              Dolev Farhi & Nick Aleks
   '''.format(version=VERSION)
 
-
+def download_logo_as_base64(logo_url: str):
+  return base64.b64encode(requests.get(logo_url).content).decode('utf-8')
 
 def generate_html_output(logo_url: str, path:str, json_output:list, urls:list):
   date = datetime.today().strftime('%d.%m.%Y')
@@ -206,7 +208,7 @@ def generate_html_output(logo_url: str, path:str, json_output:list, urls:list):
       <center>
         <h1> Security audit for GraphQL </h1>
         <h2> {date} </h2>
-        <img style='display: block;margin-left: auto;margin-right: auto;width: 30%;' src='{logo_url}' >
+        <img style='display: block;margin-left: auto;margin-right: auto;width: 30%;' src='data:image/png;base64, {download_logo_as_base64(logo_url)}' >
       </center>
       <br><hr>
 
@@ -235,6 +237,13 @@ def generate_html_output(logo_url: str, path:str, json_output:list, urls:list):
     <style>
       h1, h2, h3, h4, h5, h6 {{
           font-size: 1.3em; 
+      }}
+      
+      img{{
+        max-height:500px;
+        max-width:500px;
+        height:auto;
+        width:auto;
       }}
 
       .pie {{
