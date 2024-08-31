@@ -167,18 +167,27 @@ def generate_html_output(logo_url: str, path:str, json_output:list, urls:list):
       <p> {vuln["description"]}  </p>
       
       <h4> Proof in curl </h4>
-      <div class="code-container">
-        <button class="copy-button">
-          <span class="clipboard-icon">&#128203;</span>
-          <span class="checkmark-icon">&#9989;</span>
-        </button>
-        <pre><code>
-          {vuln["curl_verify"]}
+      {
+          ''' 
+            <div class="code-container">
+              <button class="copy-button">
+                <span class="clipboard-icon">&#128203;</span>
+                <span class="checkmark-icon">&#9989;</span>
+              </button>
+              <pre><code>
+                
+              
+          ''' + vuln["curl_verify"]
+          if(len(vuln["curl_verify"]) >= 2) else 
+          ''' 
+          <pre><code>
+            Sorry, We couldn't generate curl proof for this vulnerability.
+          '''
+      }
         </code></pre>
       </div>
-
       <br>
-      <br>
+      <br>  
       '''
   # calculate % for graph
   temp_severity_list = [0,0,0,0,0]
