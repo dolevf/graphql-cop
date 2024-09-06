@@ -135,7 +135,7 @@ json_output = sorted(json_output, key=lambda d: d['title'])
 if options.format == 'json':
     print(dumps(json_output))
 elif options.format == "html":
-    generate_html_output("https://github.com/dolevf/graphql-cop/blob/main/static/images/logo.png?raw=true", "./", json_output, paths)
+    generate_html_output("./", json_output, paths)
 else:
     for i in json_output:
         if i['result']:
