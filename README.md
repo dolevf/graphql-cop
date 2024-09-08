@@ -133,3 +133,11 @@ Starting...
 [HIGH] Alias Overloading with 100+ aliases is allowed (Denial of Service)
 [HIGH] Queries are allowed with 1000+ of the same repeated field (Denial of Service)
 ```
+
+Generate html report 
+```
+$ python3 .\graphql-cop.py -t https://google.com -o html
+```
+(fake report for presentation purposes)
+![alt text](./static/images/html_graph_presentation.png)
+
