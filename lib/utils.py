@@ -168,10 +168,10 @@ def generate_html_output(path:str, json_output:list, urls:list):
       <h4> Description  </h4>
       <p> {vuln["description"]}  </p>
       
-      <h4> Proof in curl </h4>
-      {
-          ''' 
-            <div class="code-container">
+      <h4> Proof in curl </h4>''' 
+      if(len(vuln["curl_verify"]) >= 2):
+        html_vulns_desc += '''
+        <div class="code-container">
               <button class="copy-button">
                 <span class="clipboard-icon">&#128203;</span>
                 <span class="checkmark-icon">&#9989;</span>
@@ -180,13 +180,13 @@ def generate_html_output(path:str, json_output:list, urls:list):
                 
               
           ''' + vuln["curl_verify"]
-          if(len(vuln["curl_verify"]) >= 2) else 
-          ''' 
+      else :
+        html_vulns_desc += ''' 
           <pre><code>
             Sorry, We couldn't generate curl proof for this vulnerability.
           '''
-      }
-        </code></pre>
+      
+      html_vulns_desc += '''</code></pre>
       </div>
       <br>
       <br>  
