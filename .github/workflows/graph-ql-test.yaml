@@ -16,28 +16,20 @@ jobs:
         python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12' ]
     name: Python ${{ matrix.python-version }} sample
 
-    services:
-      graphql:
-        build: ./Github-test/
-        ports:
-          - 4000:4000
-        options: --health-cmd="curl -f http://localhost:4000/ || exit 1" --health-interval=10s --health-timeout=5s --health-retries=5
-
     steps:
+      # 1. Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: ${{ matrix.python-version }} 
-          architecture: x64
+      # 2. Build Docker image for GraphQL server
+      - name: Build GraphQL Docker image
+        run: docker build -t graphql-server ./Github-test/
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      # 3. Run Docker container with GraphQL server
+      - name: Start GraphQL Docker container
+        run: docker run -d -p 4000:4000 --name graphql-server graphql-server
 
+      # 4. Wait for GraphQL server to be ready
       - name: Wait for GraphQL server
         run: |
           until curl -s http://localhost:4000/health; do
@@ -45,11 +37,31 @@ jobs:
             sleep 5
           done
 
+      # 5. Set up Python environment for the matrix version
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }} 
+          architecture: x64
+
+      # 6. Install Python dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 7. Run GraphQL-cop normal test
       - name: Run GraphQL-cop normal test
         run: python graphql-cop.py -t http://localhost:4000/
 
+      # 8. Run GraphQL-cop force test
       - name: Run GraphQL-cop force test
         run: python graphql-cop.py -t http://localhost:4000/ -f
 
-      - name: Run GraphQL-cop normal test with html output
+      # 9. Run GraphQL-cop normal test with HTML output
+      - name: Run GraphQL-cop normal test with HTML output
         run: python graphql-cop.py -t http://localhost:4000/ -f -o html
+
+      # 10. Stop and remove Docker container after tests
+      - name: Stop and clean up Docker container
+        run: docker stop graphql-server && docker rm graphql-server
