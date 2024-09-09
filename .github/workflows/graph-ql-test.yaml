@@ -1,0 +1,107 @@
+name: GraphQL Python Test with Nginx Proxy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
+    name: Python ${{ matrix.python-version }} sample
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+
+      - name: Install Nginx
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nginx
+          
+          # Configure Nginx as a reverse proxy (port 8080 -> port 4000)
+          sudo bash -c 'cat <<EOL > /etc/nginx/sites-available/default
+          server {
+              listen 8080;
+              location / {
+                  proxy_pass http://127.0.0.1:4000;
+                  proxy_set_header Host \$host;
+                  proxy_set_header X-Real-IP \$remote_addr;
+                  proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto \$scheme;
+              }
+          }
+          EOL'
+          
+          # Restart Nginx to apply configuration
+          sudo systemctl restart nginx
+
+
+      - name: Build GraphQL Docker image
+        run: docker build -t graphql-server ./Github-test/
+
+
+      - name: Start GraphQL Docker container
+        run: docker run -d -p 4000:4000 --name graphql-server graphql-server
+
+      - name: Wait for GraphQL server
+        run: |
+          until curl -s http://localhost:4000/health; do
+            echo "Waiting for GraphQL server..."
+            sleep 5
+          done
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }} 
+          architecture: x64
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run GraphQL-cop test - Default
+        run: |
+          expected_output="Alias Overloading" 
+          actual_output=$(python graphql-cop.py -t http://localhost:4000/)
+          echo $actual_output;
+          if [[ "$actual_output" == *"$expected_output"* ]]; then
+            echo "Output matches expected result."
+          else
+            echo "Output does not match expected result."
+            exit 1
+          fi
+
+      - name: Run GraphQL-cop force test through proxy
+        run: |
+          expected_output="Alias Overloading" 
+          actual_output=$(python graphql-cop.py -t http://localhost:4000/ -f -x http://127.0.0.1:8080)
+          echo $actual_output;
+          if [[ "$actual_output" == *"$expected_output"* ]]; then
+            echo "Output matches expected result."
+          else
+            echo "Output does not match expected result."
+            exit 1
+          fi
+
+      - name: Run GraphQL-cop normal test with HTML output
+        run: python graphql-cop.py -t http://localhost:4000/ -f -o htmlDebug
+
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: html-raport-${{ matrix.python-version }}
+          path: report.html
+
+      - name: Stop and clean up Docker container
+        run: docker stop graphql-server && docker rm graphql-server
