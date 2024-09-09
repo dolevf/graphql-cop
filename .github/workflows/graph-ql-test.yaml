@@ -78,14 +78,12 @@ jobs:
       # 9. Run GraphQL-cop normal test with HTML output
       - name: Run GraphQL-cop normal test with HTML output
         run: python graphql-cop.py -t http://localhost:4000/ -f -o htmlDebug
-      
-      # 10. Upload html report
-      - name: Upload HTML Report
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: graphql-test-html-report
           path: report.html
+       
 
-      # 11. Stop and remove Docker container after tests
+      # 10. Stop and remove Docker container after tests
       - name: Stop and clean up Docker container
         run: docker stop graphql-server && docker rm graphql-server
