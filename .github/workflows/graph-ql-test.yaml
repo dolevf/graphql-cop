@@ -21,6 +21,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 2. Setup a proxy for testing of proxy option 
+      - name: Install tinyproxy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tinyproxy
+          
+          # Configure tinyproxy to listen on 127.0.0.1:8080
+          sudo sed -i 's/^Port 8888/Port 8080/' /etc/tinyproxy/tinyproxy.conf
+          sudo sed -i 's/^Allow 127.0.0.1/#Allow 127.0.0.1/' /etc/tinyproxy/tinyproxy.conf
+          sudo sed -i 's/^#DisableViaHeader Yes/DisableViaHeader Yes/' /etc/tinyproxy/tinyproxy.conf
+          
+          # Restart tinyproxy to apply the configuration
+          sudo systemctl restart tinyproxy
+          
+          # Ensure tinyproxy is running
+          sudo systemctl status tinyproxy
+
       # 2. Build Docker image for GraphQL server
       - name: Build GraphQL Docker image
         run: docker build -t graphql-server ./Github-test/
@@ -54,14 +71,21 @@ jobs:
       - name: Run GraphQL-cop normal test
         run: python graphql-cop.py -t http://localhost:4000/
 
-      # 8. Run GraphQL-cop force test
+      # 8. Run GraphQL-cop force test with proxy
       - name: Run GraphQL-cop force test
-        run: python graphql-cop.py -t http://localhost:4000/ -f
+        run: python graphql-cop.py -t http://localhost:4000/ -f -x http://127.0.0.1:8080
 
       # 9. Run GraphQL-cop normal test with HTML output
       - name: Run GraphQL-cop normal test with HTML output
-        run: python graphql-cop.py -t http://localhost:4000/ -f -o html
+        run: python graphql-cop.py -t http://localhost:4000/ -f -o htmlDebug
+      
+      # 10. Upload html report
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: graphql-test-html-report
+          path: report.html
 
-      # 10. Stop and remove Docker container after tests
+      # 11. Stop and remove Docker container after tests
       - name: Stop and clean up Docker container
         run: docker stop graphql-server && docker rm graphql-server
