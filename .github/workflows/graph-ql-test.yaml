@@ -74,7 +74,7 @@ jobs:
         run: |
           expected_output="Alias Overloading" 
           actual_output=$(python graphql-cop.py -t http:/localhost:4000/)
-          
+          echo $actual_output;
           if [[ "$actual_output" == *"$expected_output"* ]]; then
             echo "Output matches expected result."
           else
@@ -86,7 +86,7 @@ jobs:
         run: |
           expected_output="Alias Overloading" 
           actual_output=$(python graphql-cop.py -t http:/localhost:4000/ -f -x http://127.0.0.1:8080)
-          
+          echo $actual_output;
           if [[ "$actual_output" == *"$expected_output"* ]]; then
             echo "Output matches expected result."
           else
