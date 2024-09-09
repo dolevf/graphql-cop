@@ -1,4 +1,4 @@
-name: GraphQL Python Test
+name: GraphQL Python Test with Nginx Proxy
 
 on:
   push:
@@ -13,40 +13,45 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12' ]
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
     name: Python ${{ matrix.python-version }} sample
 
     steps:
-      # 1. Checkout code
+
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Setup a proxy for testing of proxy option 
-      - name: Install tinyproxy
+
+      - name: Install Nginx
         run: |
           sudo apt-get update
-          sudo apt-get install -y tinyproxy
+          sudo apt-get install -y nginx
           
-          # Configure tinyproxy to listen on 127.0.0.1:8080
-          sudo sed -i 's/^Port 8888/Port 8080/' /etc/tinyproxy/tinyproxy.conf
-          sudo sed -i 's/^Allow 127.0.0.1/#Allow 127.0.0.1/' /etc/tinyproxy/tinyproxy.conf
-          sudo sed -i 's/^#DisableViaHeader Yes/DisableViaHeader Yes/' /etc/tinyproxy/tinyproxy.conf
+          # Configure Nginx as a reverse proxy (port 8080 -> port 4000)
+          sudo bash -c 'cat <<EOL > /etc/nginx/sites-available/default
+          server {
+              listen 8080;
+              location / {
+                  proxy_pass http://127.0.0.1:4000;
+                  proxy_set_header Host \$host;
+                  proxy_set_header X-Real-IP \$remote_addr;
+                  proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto \$scheme;
+              }
+          }
+          EOL'
           
-          # Restart tinyproxy to apply the configuration
-          sudo systemctl restart tinyproxy
-          
-          # Ensure tinyproxy is running
-          sudo systemctl status tinyproxy
+          # Restart Nginx to apply configuration
+          sudo systemctl restart nginx
 
-      # 2. Build Docker image for GraphQL server
+
       - name: Build GraphQL Docker image
         run: docker build -t graphql-server ./Github-test/
 
-      # 3. Run Docker container with GraphQL server
+
       - name: Start GraphQL Docker container
         run: docker run -d -p 4000:4000 --name graphql-server graphql-server
 
-      # 4. Wait for GraphQL server to be ready
       - name: Wait for GraphQL server
         run: |
           until curl -s http://localhost:4000/health; do
@@ -54,36 +59,49 @@ jobs:
             sleep 5
           done
 
-      # 5. Set up Python environment for the matrix version
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
           python-version: ${{ matrix.python-version }} 
           architecture: x64
-
-      # 6. Install Python dependencies
+          
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 7. Run GraphQL-cop normal test
-      - name: Run GraphQL-cop normal test
-        run: python graphql-cop.py -t http://localhost:4000/
+      - name: Run GraphQL-cop test - Default
+        run: |
+          expected_output="[HIGH] Alias Overloading" 
+          actual_output=$(python graphql-cop.py -t http:/localhost:4000/)
+          
+          if [[ "$actual_output" == *"$expected_output"* ]]; then
+            echo "Output matches expected result."
+          else
+            echo "Output does not match expected result."
+            exit 1
+          fi
 
-      # 8. Run GraphQL-cop force test with proxy
-      - name: Run GraphQL-cop force test
-        run: python graphql-cop.py -t http://localhost:4000/ -f -x http://127.0.0.1:8080
+      - name: Run GraphQL-cop force test through proxy
+        run: |
+          expected_output="[HIGH] Alias Overloading" 
+          actual_output=$(python graphql-cop.py -t http:/localhost:4000/ -f -x http://127.0.0.1:8080)
+          
+          if [[ "$actual_output" == *"$expected_output"* ]]; then
+            echo "Output matches expected result."
+          else
+            echo "Output does not match expected result."
+            exit 1
+          fi
 
-      # 9. Run GraphQL-cop normal test with HTML output
-      - name: Run GraphQL-cop normal test with HTML output and upload raport as an artifact
-        run: python graphql-cop.py -t http://localhost:4000/ -f -o htmlDebug
-      - uses: actions/upload-artifact@v4
+      - name: Run GraphQL-cop normal test with HTML output through proxy
+        run: python graphql-cop.py -t http://localhost:4000/ -f -o html
+
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v3
         with:
-          name: graphql-test-html-report
+          name: html-raport-${{ matrix.python-version }}
           path: report.html
-       
 
-      # 10. Stop and remove Docker container after tests
       - name: Stop and clean up Docker container
         run: docker stop graphql-server && docker rm graphql-server
