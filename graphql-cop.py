@@ -136,6 +136,8 @@ if options.format == 'json':
     print(dumps(json_output))
 elif options.format == "html":
     generate_html_output("./", json_output, paths)
+elif options.format == "htmlDebug":
+    generate_html_output("./report.html", json_output, paths)
 else:
     for i in json_output:
         if i['result']:
