@@ -95,7 +95,7 @@ jobs:
           fi
 
       - name: Run GraphQL-cop normal test with HTML output through proxy
-        run: python graphql-cop.py -t http://localhost:4000/ -f -o html
+        run: python graphql-cop.py -t http://localhost:4000/ -f -o htmlDebug
 
       - name: Upload HTML Report
         uses: actions/upload-artifact@v3
