@@ -129,3 +129,43 @@ Starting...
 [HIGH] Alias Overloading with 100+ aliases is allowed (Denial of Service)
 [HIGH] Queries are allowed with 1000+ of the same repeated field (Denial of Service)
 ```
+
+## Docker Setup and Usage
+
+### Prerequisites
+- [Docker](https://www.docker.com/get-started) installed on your machine.
+
+### Building the Docker Image
+
+1. Clone the repository:
+```
+git clone https://github.com/dolevf/graphql-cop.git
+cd graphql-cop
+```
+
+2. Build the Docker image:
+```
+docker build -t graphql-cop:latest .
+```
+
+### Running the Docker Container
+You can run the Docker container and pass arguments to the graphql-cop script as follows:
+
+```
+docker run --rm -it graphql-cop:latest -t <GRAPHQL_ENDPOINT> -H '{"<HEADER_KEY>": "<HEADER_VALUE>"}'
+```
+
+### Example
+Here’s an example of running the container:
+```
+docker run --rm -it graphql-cop:latest -t https://example.com/graphql -H '{"Authorization": "Bearer abc123xyz"}'
+```
+### Note
+For a list of all available options, run:
+```
+docker run --rm -it graphql-cop:latest --help
+```
+
+Troubleshooting
+1. File Not Found Error: If the container cannot find the script to execute, ensure the repository structure is intact and the Dockerfile is correctly set up.
+2. Dependencies Issue: If there are missing dependencies, verify that the requirements.txt file is complete.
