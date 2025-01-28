@@ -64,6 +64,7 @@ Options:
   -x PROXY, --proxy=PROXY
                         HTTP(S) proxy URL in the form
                         http://user:pass@host:port
+  -w, --wordlist       Path to a list of custom GraphQL endpoints.
   -v, --version         Print out the current version and exit.
   -T, --tor           Enable Tor proxy
 ```

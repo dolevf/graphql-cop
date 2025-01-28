@@ -20,7 +20,7 @@ from lib.tests.dos_circular_introspection import circular_query_introspection
 from lib.tests.info_get_based_mutation import get_based_mutation
 from lib.tests.info_post_based_csrf import post_based_csrf
 from lib.tests.info_unhandled_error import unhandled_error_detection
-from lib.utils import is_graphql, draw_art
+from lib.utils import is_graphql, draw_art, read_custom_wordlist
 
 from termcolor import colored
 
@@ -35,6 +35,7 @@ parser.add_option('-d', '--debug', dest='debug_mode', action='store_true',
                         help='Append a header with the test name for debugging', default=False)
 parser.add_option('-x', '--proxy', dest='proxy', default=None,
                   help='HTTP(S) proxy URL in the form http://user:pass@host:port')
+parser.add_option('-w', '--wordlist', dest='wordlist', default=False, help='Path to a list of custom GraphQL endpoints')
 parser.add_option('--version', '-v', dest='version', action='store_true', default=False,
                         help='Print out the current version and exit.')
 parser.add_option('--tor','-T', dest='tor', action='store_true', default=False,
@@ -82,7 +83,12 @@ if not urlparse(options.url).scheme:
 else:
     url = options.url
 
-endpoints = ['/graphiql', '/playground', '/console', '/graphql']
+if options.wordlist:
+    endpoints = read_custom_wordlist(options.wordlist)
+    print(endpoints)
+else:
+    endpoints = ['/graphiql', '/playground', '/console', '/graphql']
+
 paths = []
 parsed = urlparse(url)
 

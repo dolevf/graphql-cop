@@ -1,4 +1,6 @@
 """Helper parts for graphql-cop."""
+import os
+
 import requests
 from simplejson import JSONDecodeError
 from version import VERSION
@@ -107,3 +109,17 @@ def draw_art():
            Security Auditor for GraphQL
              Dolev Farhi & Nick Aleks
   '''.format(version=VERSION)
+
+
+def read_custom_wordlist(location):
+  wordlists = set()
+  if os.path.exists(location):
+    f = open(location, 'r').read()
+    for line in f.splitlines():
+      if not line.startswith('/'):
+        line = '/' + line
+
+      wordlists.add(line)
+  else:
+    print('Could not find wordlist file: {}'.format(location))
+  return wordlists
