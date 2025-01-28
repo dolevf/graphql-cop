@@ -85,7 +85,6 @@ else:
 
 if options.wordlist:
     endpoints = read_custom_wordlist(options.wordlist)
-    print(endpoints)
 else:
     endpoints = ['/graphiql', '/playground', '/console', '/graphql']
 
