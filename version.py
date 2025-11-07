@@ -1,2 +1,2 @@
 """Version details of graphql-cop."""
-VERSION = '1.14'
+VERSION = '1.15'

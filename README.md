@@ -44,8 +44,7 @@ Final command installs all the Python packages listed in the requirements.txt.
 ## Usage
 
 ```
-$ python graphql-cop.py -h
-
+$ python3 graphql-cop.py -h
 Usage: graphql-cop.py -t http://example.com -o json
 
 Options:
@@ -59,33 +58,44 @@ Options:
                         Headers
   -o FORMAT, --output=FORMAT
                         json
+  -e EXCLUDED_TESTS, --excluded-tests=EXCLUDED_TESTS
+                        Exclude specific tests
+  -l, --list-tests      List available tests
   -f, --force           Forces a scan when GraphQL cannot be detected
   -d, --debug           Append a header with the test name for debugging
   -x PROXY, --proxy=PROXY
                         HTTP(S) proxy URL in the form
                         http://user:pass@host:port
-  -w, --wordlist        Path to a list of custom GraphQL endpoints.
+  -w WORDLIST, --wordlist=WORDLIST
+                        Path to a list of custom GraphQL endpoints
   -v, --version         Print out the current version and exit.
-  -T, --tor             Enable Tor proxy
+  -T, --tor             Sends the request through the Tor network (ensure Tor
+                        is running and properly configured)
 ```
 
-Test a website
+### Test a website
 
 ```
 $ python3 graphql-cop.py -t https://mywebsite.com/graphql
 
-                GraphQL Cop 1.1
-           Security Auditor for GraphQL
-            Dolev Farhi & Nick Aleks
-
-Starting...
 [HIGH] Introspection Query Enabled (Information Leakage)
 [LOW] GraphQL Playground UI (Information Leakage)
 [HIGH] Alias Overloading with 100+ aliases is allowed (Denial of Service)
 [HIGH] Queries are allowed with 1000+ of the same repeated field (Denial of Service)
 ```
 
-Test a website, dump to a parse-able JSON output, cURL reproduction command
+### Exclude a specific test
+
+```
+$ python3 graphql-cop.py -t https://mywebsite.com/graphql -e field_duplication
+
+[HIGH] Introspection Query Enabled (Information Leakage)
+[LOW] GraphQL Playground UI (Information Leakage)
+[HIGH] Alias Overloading with 100+ aliases is allowed (Denial of Service)
+[HIGH] Queries are allowed with 1000+ of the same repeated field (Denial of Service)
+```
+
+### Test a website, dump to a parse-able JSON output, cURL reproduction command
 
 ```
 python3 graphql-cop.py -t https://mywebsite.com/graphql -o json
@@ -115,16 +125,11 @@ python3 graphql-cop.py -t https://mywebsite.com/graphql -o json
   'title': 'Directive Overloading'}]
 ```
 
-Test a website using `graphql-cop` through a proxy (e.g. Burp Suite listening on 127.0.0.1:8080) with custom headers (e.g. Authorization):
+### Test a website through a proxy (e.g. Burp Suite listening on 127.0.0.1:8080) with custom headers (e.g. Authorization):
 
 ```
 $ python3 graphql-cop.py -t https://mywebsite.com/graphql --proxy=http://127.0.0.1:8080 --header '{"Authorization": "Bearer token_here"}'
 
-                GraphQL Cop 1.2
-           Security Auditor for GraphQL
-            Dolev Farhi & Nick Aleks
-
-Starting...
 [HIGH] Introspection Query Enabled (Information Leakage)
 [LOW] GraphQL Playground UI (Information Leakage)
 [HIGH] Alias Overloading with 100+ aliases is allowed (Denial of Service)
