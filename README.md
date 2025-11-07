@@ -44,7 +44,7 @@ Final command installs all the Python packages listed in the requirements.txt.
 ## Usage
 
 ```
-$ python3 graphql-cop.py -h                                                                                                                                                                                                   on main
+$ python3 graphql-cop.py -h
 Usage: graphql-cop.py -t http://example.com -o json
 
 Options:
