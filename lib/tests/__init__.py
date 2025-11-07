@@ -19,11 +19,12 @@ tests = {
     "get_method_support":get_method_support, 
     "alias_overloading":alias_overloading,
     "batch_query":batch_query,
-    "field_duplication":field_duplication,
     "trace_mode":trace_mode,
     "directive_overloading":directive_overloading,
     "circular_query_introspection":circular_query_introspection,
     "get_based_mutation":get_based_mutation,
     "post_based_csrf":post_based_csrf,
-    "unhandled_error_detection":unhandled_error_detection
+    "unhandled_error_detection":unhandled_error_detection,
+    # https://github.com/dolevf/graphql-cop/issues/43
+    # "field_duplication":field_duplication, 
 }
